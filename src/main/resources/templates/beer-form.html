@@ -10,7 +10,28 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="container">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">Beer competition editor</span>
+        <button class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link" href="#">Competitions</a>
+                <a class="nav-link" href="#">Competitors</a>
+                <a class="nav-link active" aria-current="page" href="#">Beers</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
     <h3>Edit beer</h3>
     <form action="#"
           th:action="@{/admin/beers/upsert/{id}(id=${beer.id})}"
@@ -38,7 +59,7 @@
         <div class="mb-3">
             <label for="alcoholPercentage" class="form-label">Alcohol percentage</label>
             <input type="number" th:field="*{alcoholPercentage}" id="alcoholPercentage" placeholder="Alcohol percentage"
-                   class="form-control">
+                   step="0.1" class="form-control">
             <span th:if="${#fields.hasErrors('alcoholPercentage')}" th:errors="*{alcoholPercentage}"></span>
         </div>
 
@@ -51,7 +72,7 @@
             <span th:if="${#fields.hasErrors('competition')}" th:errors="*{competition}"></span>
         </div>
 
-        <input type="submit" value="Update beer" class="btn btn-primary">
+        <input type="submit" th:value="${beer.id} ? 'Update beer' : 'Insert beer'" class="btn btn-primary">
         <a class="btn btn-secondary" role="button" th:href="@{/admin/beers/}">Cancel</a>
     </form>
 </div>
