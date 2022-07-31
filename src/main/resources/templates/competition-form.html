@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"></head>
+<body>
+<nav th:replace="fragments/navbar"></nav>
+<div class="container-fluid">
+    <h3>Edit competition</h3>
+    <form action="#"
+          th:action="@{/admin/competitions/upsert/{id}(id=${competition.id})}"
+          th:object="${competition}"
+          method="post">
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" th:field="*{name}" id="name" placeholder="Name" class="form-control">
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <input type="text" th:field="*{description}" id="description" placeholder="Description" class="form-control">
+            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="type" class="form-label">Type</label>
+            <select th:field="*{type}" id="type" class="form-select">
+                <option th:each="type : ${T(fi.homebrewing.competition.domain.Competition.Type).values()}" th:value="${type}" th:text="${type}">
+                </option>
+            </select>
+            <span th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></span>
+        </div>
+
+        <input type="submit" th:value="${competition.id} ? 'Update competition' : 'Insert competition'" class="btn btn-primary">
+        <a class="btn btn-secondary" role="button" th:href="@{/admin/competitions/}">Cancel</a>
+    </form>
+</div>
+
+</body>
+</html>

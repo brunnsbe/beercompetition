@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">Beer competition editor</span>
+        <button class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav" th:name="${activePage}">
+                <a th:class="${activePage == '/admin/competitions'} ? 'nav-link active' : 'nav-link'" href="/admin/competitions/">Competitions</a>
+                <a th:class="${activePage == '/admin/competitors'} ? 'nav-link active' : 'nav-link'" href="/admin/competitors/">Competitors</a>
+                <a th:class="${activePage == '/admin/beers'} ? 'nav-link active' : 'nav-link'" href="/admin/beers/">Beers</a>
+            </div>
+        </div>
+    </div>
+</nav>

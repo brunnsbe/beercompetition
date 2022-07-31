@@ -1,20 +1,42 @@
 package fi.homebrewing.competition.domain;
 
+import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.lang.Nullable;
 
-@Entity(name = "Competition")
-@Table(name = "competition")
+@Entity
 public class Competition {
+    @Id
+    @GeneratedValue
+    private UUID id;
+    @NotBlank(message = "{name.mandatory}")
+    private String name;
+    @Nullable
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    private Type type;
+
+    @Nullable
+    @Column(columnDefinition = "DATE")
+    private LocalDate deadlineDate;
+
+    @OneToMany(mappedBy="competition")
+    private Set<CompetitionCategory> competitionCategories;
+
     public Competition() {
     }
 
@@ -25,27 +47,12 @@ public class Competition {
         OTHER
     }
 
-    public Competition(UUID id, String name, String comment, Type type) {
-        this.id = id;
+    public Competition(String name, String description, Type type, LocalDate deadlineDate) {
         this.name = name;
-        this.comment = comment;
+        this.description = description;
         this.type = type;
+        this.deadlineDate = deadlineDate;
     }
-
-    public Competition(String name, String comment, Type type) {
-        this(UUID.randomUUID(), name, comment, type);
-    }
-
-    @Id
-    @GeneratedValue
-    private UUID id;
-    @NotBlank(message = "{name.mandatory}")
-    private String name;
-    @Nullable
-    private String comment;
-
-    @Enumerated(EnumType.STRING)
-    private Type type;
 
     public UUID getId() {
         return id;
@@ -64,12 +71,12 @@ public class Competition {
     }
 
     @Nullable
-    public String getComment() {
-        return comment;
+    public String getDescription() {
+        return description;
     }
 
-    public void setComment(@Nullable String comment) {
-        this.comment = comment;
+    public void setDescription(@Nullable String comment) {
+        this.description = comment;
     }
 
     public Type getType() {
@@ -78,5 +85,19 @@ public class Competition {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public Set<CompetitionCategory> getCompetitionCategories() {
+        return competitionCategories;
+    }
+
+    @Transient
+    public Set<Beer> getBeers() {
+        return competitionCategories.stream().flatMap(v -> v.getBeers().stream()).collect(Collectors.toSet());
+    }
+
+    @Transient
+    public Set<Competitor> getCompetitors() {
+        return competitionCategories.stream().flatMap(v -> v.getBeers().stream()).map(Beer::getCompetitor).collect(Collectors.toSet());
     }
 }

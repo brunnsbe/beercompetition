@@ -4,5 +4,6 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BeerRepository extends JpaRepository<Beer, UUID> {
+public interface CompetitionCategoryRepository extends JpaRepository<CompetitionCategory, UUID> {
 }
+

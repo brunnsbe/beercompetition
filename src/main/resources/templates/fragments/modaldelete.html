@@ -1,0 +1,21 @@
+<div class="modal fade" id="modalDelete" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDeleteLabel" th:text="#{delete}"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" th:text="#{are_you_sure}"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}"></button>
+                <a class="btn btn-primary"th:text="#{delete}"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const modalDelete = document.getElementById('modalDelete');
+    modalDelete.addEventListener('show.bs.modal', function (e) {
+        this.querySelector('.btn-primary').setAttribute('href', e.relatedTarget.dataset.href);
+    });
+</script>

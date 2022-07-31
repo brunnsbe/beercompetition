@@ -6,44 +6,37 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.lang.Nullable;
-
-@Entity(name = "Beer")
-@Table(name = "beer")
+@Entity
 public class Beer {
     @Id
     @GeneratedValue
     private UUID id;
-    @ManyToOne
-    private Competition competition;
+    @ManyToOne(optional = false)
+    private CompetitionCategory competitionCategory;
+    @ManyToOne(optional = false)
+    private Competitor competitor;
     @NotBlank(message = "{name.mandatory}")
     private String name;
     @NotBlank(message = "Style is mandatory")
     private String style;
-    @Nullable
     private String comment;
 
-    @Nullable
     @Max(value = 30)
     private Double alcoholPercentage;
 
     public Beer() {}
 
-    public Beer(UUID id, String name, String style, String comment, Competition competition, @Nullable Double alcoholPercentage) {
-        this.id = id;
+    public Beer(String name, String style, String comment, CompetitionCategory competitionCategory, Competitor competitor, Double alcoholPercentage) {
         this.name = name;
         this.style = style;
         this.comment = comment;
-        this.competition = competition;
+        this.competitionCategory = competitionCategory;
+        this.competitor = competitor;
         this.alcoholPercentage = alcoholPercentage;
-    }
 
-    public Beer(String name, String style, String comment, Competition competition, @Nullable Double alcoholPercentage) {
-        this(UUID.randomUUID(), name, style, comment, competition, alcoholPercentage);
     }
 
     public UUID getId() {
@@ -78,20 +71,27 @@ public class Beer {
         this.comment = comment;
     }
 
-    @Nullable
     public Double getAlcoholPercentage() {
         return alcoholPercentage;
     }
 
-    public void setAlcoholPercentage(@Nullable Double alcoholPercentage) {
+    public void setAlcoholPercentage(Double alcoholPercentage) {
         this.alcoholPercentage = alcoholPercentage;
     }
 
-    public Competition getCompetition() {
-        return competition;
+    public Competitor getCompetitor() {
+        return competitor;
     }
 
-    public void setCompetition(Competition competition) {
-        this.competition = competition;
+    public void setCompetitor(Competitor competitor) {
+        this.competitor = competitor;
+    }
+
+    public CompetitionCategory getCompetitionCategory() {
+        return competitionCategory;
+    }
+
+    public void setCompetitionCategory(CompetitionCategory competitionCategory) {
+        this.competitionCategory = competitionCategory;
     }
 }
