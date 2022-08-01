@@ -1,7 +1,6 @@
 package fi.homebrewing.competition.loader;
 
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 import javax.annotation.PostConstruct;
 
@@ -23,15 +22,14 @@ public record TestDataLoader(BeerRepository beerRepository,
 
     @PostConstruct
     private void loadData() {
-        this.competitionRepository.saveAll(
+        final List<Competition> competitions = this.competitionRepository.saveAll(
             List.of(
                 new Competition("Valtakunnallinen kotiolutkilpailu 2022", "Finland's oldest homebrewing competition", Competition.Type.HOMEBREWING, null),
                 new Competition("Suomen Paras Olut 2022", "Best commercial beer of Finland", Competition.Type.COMMERCIAL, null)
             )
         );
-        final List<Competition> competitions = this.competitionRepository.findAll();
 
-        this.competitionCategoryRepository.saveAll(
+        final List<CompetitionCategory> competitionCategories = this.competitionCategoryRepository.saveAll(
             List.of(
                 new CompetitionCategory("1: Lager ja lager-muistuttavat tyylit", "", competitions.get(0)),
                 new CompetitionCategory("2: Pale ale", "", competitions.get(0)),
@@ -53,15 +51,13 @@ public record TestDataLoader(BeerRepository beerRepository,
                 new CompetitionCategory("Muut oluet", "Sarjaan voivat osallistua muihin sarjoihin sopimattomat oluet.", competitions.get(1))
             )
         );
-        final List<CompetitionCategory> competitionCategories = this.competitionCategoryRepository.findAll();
 
-        this.competitorRepository.saveAll(
+        final List<Competitor> competitors = this.competitorRepository.saveAll(
             List.of(
                 new Competitor("André", "Brunnsberg", "Esbo", "+358405353900", "andre.brunnsberg@gmail.com"),
                 new Competitor("Patrik", "Pesonius", "Helsinki", "+123", "patrik.pesonius@gmail.com")
             )
         );
-        final List<Competitor> competitors = this.competitorRepository.findAll();
 
         this.beerRepository.saveAll(
             List.of(

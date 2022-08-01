@@ -21,6 +21,7 @@ import org.springframework.lang.Nullable;
 public class Competition {
     @Id
     @GeneratedValue
+    @Column(columnDefinition = "uuid")
     private UUID id;
     @NotBlank(message = "{name.mandatory}")
     private String name;

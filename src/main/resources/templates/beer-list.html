@@ -5,9 +5,23 @@
 <nav th:replace="fragments/navbar"></nav>
 
 <div class="container-fluid" th:unless="${#lists.isEmpty(currentBeers)}">
-    <h3>Beers</h3>
 
-    <a class="btn btn-primary" role="button" th:href="@{edit/}">Create new</a>
+    <div class="row">
+        <div class="col">
+            <br/>
+            <a class="btn btn-primary" role="button" th:href="@{edit/}">Create new</a>
+        </div>
+    </div>
+
+    <form class="row gy-2 gx-3 align-items-center" id="filterForm" th:action="@{''}">
+        <div class="col-auto">
+            <label for="competition" class="col-sm-2 col-form-label">Competition</label>
+            <select name="competition" id="competition" class="form-select">
+                <option value="">All</option>
+                <option th:each="c : ${competitions}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id} == ${competition.id}"></option>
+            </select>
+        </div>
+    </form>
 
     <table class="table">
         <thead>
@@ -41,5 +55,14 @@
 </div>
 
 <div th:replace="fragments/modaldelete"></div>
+
+<script>
+    document.querySelectorAll('#filterForm select').forEach(function (field) {
+        field.addEventListener('change', function (_e) {
+            document.getElementById('filterForm').submit();
+        });
+    });
+</script>
+
 </body>
 </html>

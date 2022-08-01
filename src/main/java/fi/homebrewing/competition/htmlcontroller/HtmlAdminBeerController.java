@@ -15,6 +15,9 @@ import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
 import fi.homebrewing.competition.domain.Competitor;
 import fi.homebrewing.competition.domain.CompetitorRepository;
+import org.springframework.data.domain.Example;
+import org.springframework.data.repository.query.Param;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,9 +48,27 @@ public class HtmlAdminBeerController {
     }
 
     @GetMapping("/")
-    public String getBeersList(Model model) {
+    public String getBeersList(Model model,
+                               @Param("competition") Competition competition) {
+
         model.addAttribute("activePage", "/admin/beers");
-        model.addAttribute("currentBeers", beerRepository.findAll());
+
+        // Filters
+        model.addAttribute(
+            "competitions",
+            competitionRepository.getCompetitionsSortedByName(null)
+        );
+        model.addAttribute("competition", competition);
+
+        // TODO: Add filter for category
+
+        // Table
+        final List<Beer> allBeers = beerRepository.findAll();
+        model.addAttribute(
+            "currentBeers",
+            allBeers.stream().filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategory().getCompetition())).toList()
+        );
+
         return THYMELEAF_TEMPLATE_BEER_LIST;
     }
 

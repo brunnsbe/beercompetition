@@ -3,6 +3,7 @@ package fi.homebrewing.competition.domain;
 
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,6 +16,7 @@ import org.springframework.lang.Nullable;
 public class Competitor {
     @Id
     @GeneratedValue
+    @Column(columnDefinition = "uuid")
     private UUID id;
     @Nullable
     private String firstName;

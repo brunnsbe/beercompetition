@@ -1,5 +1,6 @@
 package fi.homebrewing.competition.htmlcontroller;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -10,6 +11,8 @@ import fi.homebrewing.competition.domain.Competition;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
 import fi.homebrewing.competition.domain.CompetitorRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,9 +43,24 @@ public class HtmlAdminCompetitionController {
     }
 
     @GetMapping("/")
-    public String getCompetitionsList(Model model) {
+    public String getCompetitionsList(Model model,
+                                      @Nullable @Param("competitionType") Competition.Type competitionType) {
+
         model.addAttribute("activePage", "/admin/competitions");
-        model.addAttribute("competitions", competitionRepository.getCompetitionsSortedByName());
+
+        // Filters
+        model.addAttribute(
+            "competitionTypes",
+            competitionRepository.findAll().stream().map(Competition::getType).distinct().sorted().toList()
+        );
+        model.addAttribute("competitionType", competitionType);
+
+        // Table
+        model.addAttribute(
+"competitions",
+            competitionRepository.getCompetitionsSortedByName(competitionType)
+        );
+
         return THYMELEAF_TEMPLATE_COMPETITION_LIST;
     }
 

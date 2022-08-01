@@ -5,9 +5,22 @@
 <nav th:replace="fragments/navbar"></nav>
 
 <div class="container-fluid" th:unless="${#lists.isEmpty(competitions)}">
-    <h3>Competitions</h3>
+    <div class="row">
+        <div class="col">
+            <br/>
+            <a class="btn btn-primary" role="button" th:href="@{edit/}">Create new</a>
+        </div>
+    </div>
 
-    <a class="btn btn-primary" role="button" th:href="@{edit/}">Create new</a>
+    <form class="row gy-2 gx-3 align-items-center" id="filterForm" th:action="@{''}">
+        <div class="col-auto">
+            <label for="competitionType" class="col-sm-2 col-form-label">Type</label>
+            <select name="competitionType" id="competitionType" class="form-select">
+                <option value="">All</option>
+                <option th:each="type : ${competitionTypes}" th:value="${type}" th:text="${type}" th:selected="${type} == ${competitionType}"></option>
+            </select>
+        </div>
+    </form>
 
     <table class="table">
         <thead>
@@ -24,8 +37,11 @@
         <tbody>
         <tr th:each="c : ${competitions}">
             <td>
-                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}(id=${c.id})}" th:if="${#lists.isEmpty(c.competitors) && #lists.isEmpty(c.competitionCategories)}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
-                <button type="button" class="btn btn-secondary" th:unless="${#lists.isEmpty(c.competitors) && #lists.isEmpty(c.competitionCategories)}" disabled>Delete</button>
+                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}(id=${c.id})}"
+                   th:if="${#lists.isEmpty(c.competitors) && #lists.isEmpty(c.competitionCategories)}"
+                   data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
+                <button type="button" class="btn btn-secondary"
+                        th:unless="${#lists.isEmpty(c.competitors) && #lists.isEmpty(c.competitionCategories)}" disabled>Delete</button>
                 <a class="btn btn-primary" role="button" th:href="@{edit/{id}(id=${c.id})}">Edit</a>
             </td>
             <td th:text="${c.name}"></td>
@@ -41,6 +57,14 @@
 </div>
 
 <div th:replace="fragments/modaldelete"></div>
+
+<script>
+    document.querySelectorAll('#filterForm select').forEach(function (field) {
+        field.addEventListener('change', function (_e) {
+            document.getElementById('filterForm').submit();
+        });
+    });
+</script>
 
 </body>
 </html>
