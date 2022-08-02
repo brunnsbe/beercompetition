@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import fi.homebrewing.competition.domain.Competition;
 import fi.homebrewing.competition.domain.CompetitionRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,16 +32,26 @@ public class HtmlAdminCompetitionController extends ThymeLeafController {
 
     @GetMapping("/")
     public String getCompetitionsList(Model model,
-                                      @Param("competitionType") Competition.Type competitionType) {
+                                      @Nullable @Param("competitionType") Competition.Type competitionType) {
 
-        final Map<String, ?> modelAttributes = Map.of(
-            "competitionTypes",
-            competitionRepository.findAll().stream().map(Competition::getType).distinct().sorted().toList(),
-            "competitionType",
-            competitionType,
-            MODEL_ATTRIBUTE_MULTIPLE,
-            competitionRepository.findAll(competitionType)
-        );
+        final Map<String, ?> modelAttributes;
+        if (competitionType == null) {
+            modelAttributes = Map.of(
+                "competitionTypes",
+                competitionRepository.findAll().stream().map(Competition::getType).distinct().sorted().toList(),
+                MODEL_ATTRIBUTE_MULTIPLE,
+                competitionRepository.findAll(competitionType)
+            );
+        } else {
+            modelAttributes = Map.of(
+                "competitionTypes",
+                competitionRepository.findAll().stream().map(Competition::getType).distinct().sorted().toList(),
+                "competitionType",
+                competitionType,
+                MODEL_ATTRIBUTE_MULTIPLE,
+                competitionRepository.findAll(competitionType)
+            );
+        }
 
         return getRowsList(model, modelAttributes);
     }
@@ -73,7 +84,7 @@ public class HtmlAdminCompetitionController extends ThymeLeafController {
 
     @Override
     public String getActivePage() {
-        return "/admin/competitions";
+        return "/admin/competitions/";
     }
 
     @Override

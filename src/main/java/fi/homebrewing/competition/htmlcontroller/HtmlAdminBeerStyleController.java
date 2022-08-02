@@ -10,7 +10,6 @@ import javax.validation.Valid;
 import fi.homebrewing.competition.domain.BeerStyle;
 import fi.homebrewing.competition.domain.BeerStyleRepository;
 import fi.homebrewing.competition.domain.CompetitionCategory;
-import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,13 +26,10 @@ public class HtmlAdminBeerStyleController extends ThymeLeafController {
     protected static final String MODEL_ATTRIBUTE_MULTIPLE = "beerStyles";
 
     private final BeerStyleRepository beerStyleRepository;
-    private final CompetitionCategoryRepository competitionCategoryRepository;
 
-    public HtmlAdminBeerStyleController(BeerStyleRepository beerStyleRepository,
-                                        CompetitionCategoryRepository competitionCategoryRepository) {
+    public HtmlAdminBeerStyleController(BeerStyleRepository beerStyleRepository) {
 
         this.beerStyleRepository = beerStyleRepository;
-        this.competitionCategoryRepository = competitionCategoryRepository;
     }
 
     @GetMapping("/")

@@ -22,8 +22,8 @@ public abstract class ThymeLeafController {
     public abstract String getSingleModelName();
 
     public void addModelAttributes(Model model, Map<String, ?> attributes) {
-        model.addAttribute("active-page", getActivePage());
         model.addAllAttributes(attributes);
+        model.addAttribute("activePage", getActivePage());
     }
 
     protected String getRowsList(Model model, Map<String, ?> modelAttributes) {

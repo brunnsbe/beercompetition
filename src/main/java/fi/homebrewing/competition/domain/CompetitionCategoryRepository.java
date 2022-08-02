@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.lang.Nullable;
 
 public interface CompetitionCategoryRepository extends JpaRepository<CompetitionCategory, UUID> {
     default List<CompetitionCategory> findAll(Competition competition) {
