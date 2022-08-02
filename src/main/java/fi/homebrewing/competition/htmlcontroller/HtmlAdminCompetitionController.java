@@ -1,18 +1,14 @@
 package fi.homebrewing.competition.htmlcontroller;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import javax.validation.Valid;
 
-import fi.homebrewing.competition.domain.BeerRepository;
 import fi.homebrewing.competition.domain.Competition;
-import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
-import fi.homebrewing.competition.domain.CompetitorRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,79 +19,65 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/competitions")
-public class HtmlAdminCompetitionController {
-    private static final String THYMELEAF_TEMPLATE_COMPETITION_LIST = "competition-list";
-    private static final String THYMELEAF_TEMPLATE_COMPETITION_FORM = "competition-form";
+public class HtmlAdminCompetitionController extends ThymeLeafController {
+    protected static final String MODEL_ATTRIBUTE_SINGLE = "competition";
+    protected static final String MODEL_ATTRIBUTE_MULTIPLE = "competitions";
 
-    private final BeerRepository beerRepository;
     private final CompetitionRepository competitionRepository;
-    private final CompetitionCategoryRepository competitionCategoryRepository;
-    private final CompetitorRepository competitorRepository;
 
-    public HtmlAdminCompetitionController(BeerRepository beerRepository,
-                                          CompetitionRepository competitionRepository,
-                                          CompetitionCategoryRepository competitionCategoryRepository,
-                                          CompetitorRepository competitorRepository) {
-        this.beerRepository = beerRepository;
+    public HtmlAdminCompetitionController(CompetitionRepository competitionRepository) {
         this.competitionRepository = competitionRepository;
-        this.competitionCategoryRepository = competitionCategoryRepository;
-        this.competitorRepository = competitorRepository;
     }
 
     @GetMapping("/")
     public String getCompetitionsList(Model model,
-                                      @Nullable @Param("competitionType") Competition.Type competitionType) {
+                                      @Param("competitionType") Competition.Type competitionType) {
 
-        model.addAttribute("activePage", "/admin/competitions");
-
-        // Filters
-        model.addAttribute(
+        final Map<String, ?> modelAttributes = Map.of(
             "competitionTypes",
-            competitionRepository.findAll().stream().map(Competition::getType).distinct().sorted().toList()
-        );
-        model.addAttribute("competitionType", competitionType);
-
-        // Table
-        model.addAttribute(
-"competitions",
-            competitionRepository.getCompetitionsSortedByName(competitionType)
+            competitionRepository.findAll().stream().map(Competition::getType).distinct().sorted().toList(),
+            "competitionType",
+            competitionType,
+            MODEL_ATTRIBUTE_MULTIPLE,
+            competitionRepository.findAll(competitionType)
         );
 
-        return THYMELEAF_TEMPLATE_COMPETITION_LIST;
+        return getRowsList(model, modelAttributes);
     }
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
     public String getCompetitionForm(@PathVariable("id") Optional<UUID> oId, Model model) {
-        model.addAttribute("activePage", "/admin/competitions");
-
-        final Competition competition = oId.map(id -> {
-            return competitionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid beer Id:" + id));
-        }).orElseGet(Competition::new);
-
-        model.addAttribute("competition", competition);
-
-        return THYMELEAF_TEMPLATE_COMPETITION_FORM;
+        return getRowForm(oId, competitionRepository, model, Map.of(), Competition::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
-    public String upsertCompetition(@PathVariable("id") Optional<UUID> oId, @Valid Competition competition, BindingResult result) {
+    public String upsertCompetition(@PathVariable("id") Optional<UUID> oId, @Valid Competition competition, BindingResult result, Model model) {
         oId.ifPresent(competition::setId);
-
-        if (result.hasErrors()) {
-            return THYMELEAF_TEMPLATE_COMPETITION_FORM;
-        }
-
-        competitionRepository.save(competition);
-        return "redirect:/admin/competitions/";
+        return upsertRow(competition, result, model, Map::of, competitionRepository);
     }
 
     @GetMapping("/delete/{id}")
     public String deleteCompetition(@PathVariable("id") UUID id) {
-        Competition competition = competitionRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid competition Id:" + id));
+        return deleteRow(id, competitionRepository);
+    }
 
-        competitionRepository.delete(competition);
-        return "redirect:/admin/competitions/";
+    @Override
+    public String getTemplateList() {
+        return "competition-list";
+    }
+
+    @Override
+    public String getTemplateForm() {
+        return "competition-form";
+    }
+
+    @Override
+    public String getActivePage() {
+        return "/admin/competitions";
+    }
+
+    @Override
+    public String getSingleModelName() {
+        return MODEL_ATTRIBUTE_SINGLE;
     }
 }

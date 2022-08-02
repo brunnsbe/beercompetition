@@ -1,6 +1,7 @@
 package fi.homebrewing.competition.htmlcontroller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -11,7 +12,6 @@ import fi.homebrewing.competition.domain.BeerStyleRepository;
 import fi.homebrewing.competition.domain.CompetitionCategory;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,11 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/beer-styles")
-public class HtmlAdminBeerStyleController {
-    private static final String THYMELEAF_TEMPLATE_BEER_STYLE_LIST = "beer-style-list";
-    private static final String THYMELEAF_TEMPLATE_BEER_STYLE_FORM = "beer-style-form";
-
-    private static final String ACTIVE_PAGE = "/admin/beer-styles/";
+public class HtmlAdminBeerStyleController extends ThymeLeafController {
+    protected static final String MODEL_ATTRIBUTE_SINGLE = "beerStyle";
+    protected static final String MODEL_ATTRIBUTE_MULTIPLE = "beerStyles";
 
     private final BeerStyleRepository beerStyleRepository;
     private final CompetitionCategoryRepository competitionCategoryRepository;
@@ -40,57 +38,61 @@ public class HtmlAdminBeerStyleController {
 
     @GetMapping("/")
     public String getBeerStylesList(Model model,
-                                    @Nullable @Param("competitionCategory") CompetitionCategory competitionCategory) {
-
-        model.addAttribute("activePage", ACTIVE_PAGE);
+                                    @Param("competitionCategory") CompetitionCategory competitionCategory) {
 
         final List<BeerStyle> beerStyles = beerStyleRepository.findAll(); // TODO: Add filtering by competition category
 
-        // Filters
-        model.addAttribute(
-            "competitionCategories",
-            beerStyles.stream().flatMap(v -> v.getCompetitionCategories().stream()).distinct().sorted().toList()
+        final Map<String, ?> modelAttributes = Map.of(
+            HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_MULTIPLE,
+            beerStyles.stream().flatMap(v -> v.getCompetitionCategories().stream()).distinct().sorted().toList(),
+            HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_SINGLE,
+            competitionCategory,
+            MODEL_ATTRIBUTE_MULTIPLE,
+            beerStyles
         );
-        model.addAttribute("competitionCategory", competitionCategory);
 
-        // Table
-        model.addAttribute("beerStyles", beerStyles);
-
-        return THYMELEAF_TEMPLATE_BEER_STYLE_LIST;
+        return getRowsList(model, modelAttributes);
     }
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
-    public String getBeerStyleForm(@PathVariable("id") Optional<UUID> oId, Model model) {
-        model.addAttribute("activePage", ACTIVE_PAGE);
+    public String getBeerStyleForm(@PathVariable("id") Optional<UUID> oId,
+                                   Model model) {
 
-        final BeerStyle beerStyle = oId.map(id -> {
-            return beerStyleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
-        }).orElseGet(BeerStyle::new);
-
-        model.addAttribute("beerStyle", beerStyle);
-
-        return THYMELEAF_TEMPLATE_BEER_STYLE_FORM;
+        return getRowForm(oId, beerStyleRepository, model, Map.of(), BeerStyle::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
-    public String upsertCompetition(@PathVariable("id") Optional<UUID> oId, @Valid BeerStyle beerStyle, BindingResult result) {
+    public String upsertBeerStyle(@PathVariable("id") Optional<UUID> oId,
+                                  @Valid BeerStyle beerStyle,
+                                  BindingResult result,
+                                  Model model) {
+
         oId.ifPresent(beerStyle::setId);
-
-        if (result.hasErrors()) {
-            return THYMELEAF_TEMPLATE_BEER_STYLE_FORM;
-        }
-
-        beerStyleRepository.save(beerStyle);
-        return "redirect:" + ACTIVE_PAGE;
+        return upsertRow(beerStyle, result, model, Map::of, beerStyleRepository);
     }
 
     @GetMapping("/delete/{id}")
     public String deleteCompetition(@PathVariable("id") UUID id) {
-        BeerStyle beerStyle = beerStyleRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
+        return deleteRow(id, beerStyleRepository);
+    }
 
-        beerStyleRepository.delete(beerStyle);
-        return "redirect:" + ACTIVE_PAGE;
+    @Override
+    public String getTemplateList() {
+        return "beer-style-list";
+    }
+
+    @Override
+    public String getTemplateForm() {
+        return "beer-style-form";
+    }
+
+    @Override
+    public String getActivePage() {
+        return "/admin/beer-styles/";
+    }
+
+    @Override
+    public String getSingleModelName() {
+        return MODEL_ATTRIBUTE_SINGLE;
     }
 }

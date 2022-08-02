@@ -29,7 +29,8 @@ public class BeerStyle {
     private String name;
     private String description;
 
-    public BeerStyle() {}
+    public BeerStyle() {
+    }
 
     public BeerStyle(Set<CompetitionCategory> competitionCategories, String name, String description) {
         this.competitionCategories = competitionCategories;

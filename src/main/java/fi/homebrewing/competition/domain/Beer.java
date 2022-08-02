@@ -29,7 +29,8 @@ public class Beer {
     @Max(value = 30)
     private Double alcoholPercentage;
 
-    public Beer() {}
+    public Beer() {
+    }
 
     public Beer(String name, String style, String comment, CompetitionCategory competitionCategory, Competitor competitor, Double alcoholPercentage) {
         this.name = name;

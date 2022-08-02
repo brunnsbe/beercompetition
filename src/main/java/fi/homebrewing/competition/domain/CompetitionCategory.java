@@ -26,7 +26,7 @@ public class CompetitionCategory {
     private Competition competition;
     @ManyToMany
     private Set<BeerStyle> beerStyles;
-    @OneToMany(mappedBy="competitionCategory") // TODO: Is this mappedBy needed?
+    @OneToMany(mappedBy = "competitionCategory") // TODO: Is this mappedBy needed?
     private Set<Beer> beers;
 
     public CompetitionCategory() {

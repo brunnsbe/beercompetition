@@ -35,7 +35,7 @@ public class Competition {
     @Column(columnDefinition = "DATE")
     private LocalDate deadlineDate;
 
-    @OneToMany(mappedBy="competition")
+    @OneToMany(mappedBy = "competition")
     private Set<CompetitionCategory> competitionCategories;
 
     public Competition() {

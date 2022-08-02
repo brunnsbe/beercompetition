@@ -1,20 +1,19 @@
 package fi.homebrewing.competition.htmlcontroller;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import javax.validation.Valid;
 
-import fi.homebrewing.competition.domain.BeerStyle;
 import fi.homebrewing.competition.domain.BeerStyleRepository;
 import fi.homebrewing.competition.domain.Competition;
 import fi.homebrewing.competition.domain.CompetitionCategory;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,12 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/competition-categories")
-public class HtmlAdminCompetitionCategoryController {
-    private static final String THYMELEAF_TEMPLATE_LIST = "competition-category-list";
-    private static final String THYMELEAF_TEMPLATE_FORM = "competition-category-form";
-
-    private static final String ACTIVE_PAGE = "/admin/competition-categories/";
-
+public class HtmlAdminCompetitionCategoryController extends ThymeLeafController {
+    protected static final String MODEL_ATTRIBUTE_SINGLE = "competitionCategory";
+    protected static final String MODEL_ATTRIBUTE_MULTIPLE = "competitionCategories";
 
     private final CompetitionCategoryRepository competitionCategoryRepository;
     private final CompetitionRepository competitionRepository;
@@ -48,61 +44,72 @@ public class HtmlAdminCompetitionCategoryController {
 
     @GetMapping("/")
     public String getList(Model model,
-                          @Nullable @Param("competition") Competition competition) {
+                          @Param("competition") Competition competition) {
 
-        model.addAttribute("activePage", ACTIVE_PAGE);
-
-        final List<CompetitionCategory> competitionCategories = competitionCategoryRepository.findAll(competition);
-
-        // Filters
-        model.addAttribute(
-            "competitions",
+        final Map<String, ?> modelAttributes = Map.of(
+            HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
             competitionCategoryRepository.findAll((Competition)null)
                 .stream()
                 .map(CompetitionCategory::getCompetition)
                 .distinct()
-                .toList()
+                .toList(),
+            HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE,
+            competition,
+            MODEL_ATTRIBUTE_MULTIPLE,
+            competitionCategoryRepository.findAll(competition)
         );
-        model.addAttribute("competition", competition);
 
-        // Table
-        model.addAttribute("competitionCategories", competitionCategories);
-
-        return THYMELEAF_TEMPLATE_LIST;
+        return getRowsList(model, modelAttributes);
     }
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
-    public String getForm(@PathVariable("id") Optional<UUID> oId, Model model) {
-        model.addAttribute("activePage", ACTIVE_PAGE);
+    public String getCompetitionCategoryForm(@PathVariable("id") Optional<UUID> oId, Model model) {
+        final Map<String, ?> modelAttributes = Map.of(
+            HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
+            competitionRepository.findAll((Competition.Type)null),
+            HtmlAdminBeerStyleController.MODEL_ATTRIBUTE_MULTIPLE,
+            beerStyleRepository.findAll() // TODO: Sort needed
+        );
 
-        final CompetitionCategory competitionCategory = oId.map(id -> {
-            return competitionCategoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
-        }).orElseGet(CompetitionCategory::new);
-
-        model.addAttribute("competitionCategory", competitionCategory);
-
-        return THYMELEAF_TEMPLATE_FORM;
+        return getRowForm(oId, competitionCategoryRepository, model, modelAttributes, CompetitionCategory::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
-    public String upsert(@PathVariable("id") Optional<UUID> oId, @Valid CompetitionCategory competitionCategory, BindingResult result) {
+    public String upsert(@PathVariable("id") Optional<UUID> oId, @Valid CompetitionCategory competitionCategory, BindingResult result, Model model) {
         oId.ifPresent(competitionCategory::setId);
 
-        if (result.hasErrors()) {
-            return THYMELEAF_TEMPLATE_FORM;
-        }
+        final Supplier<Map<String, ?>> modelAttributes = () -> Map.of(
+            HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
+            competitionRepository.findAll((Competition.Type)null),
+            HtmlAdminBeerStyleController.MODEL_ATTRIBUTE_MULTIPLE,
+            beerStyleRepository.findAll() // TODO: Sort needed
+        );
 
-        competitionCategoryRepository.save(competitionCategory);
-        return "redirect:" + ACTIVE_PAGE;
+        return upsertRow(competitionCategory, result, model, modelAttributes, competitionCategoryRepository);
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") UUID id) {
-        CompetitionCategory competitionCategory = competitionCategoryRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
+        return deleteRow(id, competitionCategoryRepository);
+    }
 
-        competitionCategoryRepository.delete(competitionCategory);
-        return "redirect:" + ACTIVE_PAGE;
+    @Override
+    public String getTemplateList() {
+        return "competition-category-list";
+    }
+
+    @Override
+    public String getTemplateForm() {
+        return "competition-category-form";
+    }
+
+    @Override
+    public String getActivePage() {
+        return "/admin/competition-categories/";
+    }
+
+    @Override
+    public String getSingleModelName() {
+        return MODEL_ATTRIBUTE_SINGLE;
     }
 }

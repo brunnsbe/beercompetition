@@ -25,7 +25,8 @@ public class BeerStyleHasCompetitionCategory {
     //@JoinColumn(name = "competition_category_id")
     CompetitionCategory competitionCategory;
 
-    public BeerStyleHasCompetitionCategory() {}
+    public BeerStyleHasCompetitionCategory() {
+    }
 
     public BeerStyleHasCompetitionCategory(UUID id, BeerStyle beerStyle, CompetitionCategory competitionCategory) {
         this.id = id;

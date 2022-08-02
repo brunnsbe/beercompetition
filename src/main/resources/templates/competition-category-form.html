@@ -4,10 +4,10 @@
 <body>
 <nav th:replace="fragments/navbar"></nav>
 <div class="container-fluid">
-    <h3>Edit beer style</h3>
+    <h3>Edit competition category</h3>
     <form action="#"
-          th:action="@{/admin/beer-styles/upsert/{id}(id=${beerStyle.id})}"
-          th:object="${beerStyle}"
+          th:action="@{/admin/competition-categories/upsert/{id}(id=${competitionCategory.id})}"
+          th:object="${competitionCategory}"
           method="post">
 
         <div class="mb-3">
@@ -17,12 +17,30 @@
         </div>
 
         <div class="mb-3">
+            <label for="competition" class="form-label">Competition</label>
+            <select th:field="*{competition}" id="competition" class="form-select">
+                <option th:each="c : ${competitions}" th:value="${c.id}" th:text="${c.name}">
+                </option>
+            </select>
+            <span th:if="${#fields.hasErrors('competition')}" th:errors="*{competition}"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="beerStyles" class="form-label">Beer styles</label>
+            <select th:field="*{beerStyles}" id="beerStyles" class="form-select" multiple="multiple">
+                <option th:each="b : ${beerStyles}" th:value="${b.id}" th:text="${b.name}">
+                </option>
+            </select>
+            <span th:if="${#fields.hasErrors('beerStyles')}" th:errors="*{beerStyles}"></span>
+        </div>
+
+        <div class="mb-3">
             <label for="description" class="form-label">Description</label>
             <input type="text" th:field="*{description}" id="description" placeholder="description" class="form-control">
             <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
         </div>
 
-        <input type="submit" th:value="${id} ? 'Update beer style' : 'Insert beer style'" class="btn btn-primary">
+        <input type="submit" th:value="${id} ? 'Update competition category' : 'Insert competition category'" class="btn btn-primary">
         <a class="btn btn-secondary" role="button" th:href="${activePage}">Cancel</a>
     </form>
 </div>

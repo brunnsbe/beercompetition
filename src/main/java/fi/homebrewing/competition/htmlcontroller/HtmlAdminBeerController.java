@@ -2,8 +2,10 @@ package fi.homebrewing.competition.htmlcontroller;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import javax.validation.Valid;
 
@@ -12,7 +14,6 @@ import fi.homebrewing.competition.domain.BeerRepository;
 import fi.homebrewing.competition.domain.Competition;
 import fi.homebrewing.competition.domain.CompetitionCategory;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
-import fi.homebrewing.competition.domain.CompetitionRepository;
 import fi.homebrewing.competition.domain.Competitor;
 import fi.homebrewing.competition.domain.CompetitorRepository;
 import org.springframework.data.repository.query.Param;
@@ -32,94 +33,79 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/beers")
-public class HtmlAdminBeerController {
-    private static final String THYMELEAF_TEMPLATE_BEER_LIST = "beer-list";
-    private static final String THYMELEAF_TEMPLATE_BEER_FORM = "beer-form";
+public class HtmlAdminBeerController extends ThymeLeafController {
+    protected static final String MODEL_ATTRIBUTE_SINGLE = "beer";
+    protected static final String MODEL_ATTRIBUTE_MULTIPLE = "beers";
 
     private final BeerRepository beerRepository;
-    private final CompetitionRepository competitionRepository;
     private final CompetitionCategoryRepository competitionCategoryRepository;
     private final CompetitorRepository competitorRepository;
 
     public HtmlAdminBeerController(BeerRepository beerRepository,
-                                   CompetitionRepository competitionRepository,
                                    CompetitionCategoryRepository competitionCategoryRepository,
                                    CompetitorRepository competitorRepository) {
+
         this.beerRepository = beerRepository;
-        this.competitionRepository = competitionRepository;
         this.competitionCategoryRepository = competitionCategoryRepository;
         this.competitorRepository = competitorRepository;
+
     }
 
     @GetMapping("/")
-    public String getBeersList(Model model,
-                               @Param("competition") Competition competition) {
-
-        model.addAttribute("activePage", "/admin/beers");
-
+    public String getBeersList(Model model, @Param("competition") Competition competition) {
         final List<Beer> allBeers = beerRepository.findAll();
 
-        // Filters
-        model.addAttribute(
-            "competitions",
+        // TODO: Add filter for category
+        final Map<String, ?> modelAttributes = Map.of(
+            // Filters
+            HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
             allBeers.stream()
                 .map(Beer::getCompetitionCategory)
                 .map(CompetitionCategory::getCompetition)
                 .distinct()
                 .sorted(Comparator.comparing(Competition::getName))
+                .toList(),
+            HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE,
+            competition,
+            // Table
+            MODEL_ATTRIBUTE_MULTIPLE,
+            allBeers.stream()
+                .filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategory().getCompetition()))
                 .toList()
         );
-        model.addAttribute("competition", competition);
 
-        // TODO: Add filter for category
-
-        // Table
-        model.addAttribute(
-            "currentBeers",
-            allBeers.stream().filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategory().getCompetition())).toList()
-        );
-
-        return THYMELEAF_TEMPLATE_BEER_LIST;
+        return getRowsList(model, modelAttributes);
     }
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
-    public String getBeerForm(@PathVariable("id") Optional<UUID> oId, Model model) {
-        model.addAttribute("activePage", "/admin/beers");
+    public String getRowForm(@PathVariable("id") Optional<UUID> oId, Model model) {
+        final Map<String, ?> modelAttributes = Map.of(
+            "competitionCategories",
+            competitionCategoryRepository.findAll((Competition)null),
+            "competitors",
+            getCompetitorsSortedByFullname()
+        );
 
-        final Beer beer = oId.map(id -> {
-            return beerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid beer Id:" + id));
-        }).orElseGet(Beer::new);
-
-        model.addAttribute("beer", beer);
-        model.addAttribute("competitionCategories", getCompetitionCategoriesSortedByName());
-        model.addAttribute("competitors", getCompetitorsSortedByFullname());
-
-        return THYMELEAF_TEMPLATE_BEER_FORM;
+        return getRowForm(oId, beerRepository, model, modelAttributes, Beer::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
     public String upsertBeer(@PathVariable("id") Optional<UUID> oId, @Valid Beer beer, BindingResult result, Model model) {
         oId.ifPresent(beer::setId);
 
-        if (result.hasErrors()) {
-            model.addAttribute("competitionCategories", getCompetitionCategoriesSortedByName());
-            model.addAttribute("competitors", getCompetitorsSortedByFullname());
+        final Supplier<Map<String, ?>> modelAttributes = () -> Map.of(
+            HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_MULTIPLE,
+            competitionCategoryRepository.findAll((Competition)null),
+            HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
+            getCompetitorsSortedByFullname()
+        );
 
-            return THYMELEAF_TEMPLATE_BEER_FORM;
-        }
-
-        beerRepository.save(beer);
-        return "redirect:/admin/beers/";
+        return upsertRow(beer, result, model, modelAttributes, beerRepository);
     }
 
     @GetMapping("/delete/{id}")
     public String deleteBeer(@PathVariable("id") UUID id) {
-        Beer user = beerRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid beer Id:" + id));
-
-        beerRepository.delete(user);
-        return "redirect:/admin/beers/";
+        return deleteRow(id, beerRepository);
     }
 
     private List<Competitor> getCompetitorsSortedByFullname() {
@@ -128,15 +114,23 @@ public class HtmlAdminBeerController {
         return competitors;
     }
 
-    private List<CompetitionCategory> getCompetitionCategoriesSortedByName() {
-        final List<CompetitionCategory> competitionCategories = competitionCategoryRepository.findAll();
-        competitionCategories.sort(Comparator.comparing(CompetitionCategory::getName));
-        return competitionCategories;
+    @Override
+    public String getTemplateList() {
+        return "beer-list";
     }
 
-    private List<Competition> getCompetitionsSortedByName() {
-        final List<Competition> competitions = competitionRepository.findAll();
-        competitions.sort(Comparator.comparing(Competition::getName));
-        return competitions;
+    @Override
+    public String getTemplateForm() {
+        return "beer-form";
+    }
+
+    @Override
+    public String getActivePage() {
+        return "/admin/beers/";
+    }
+
+    @Override
+    public String getSingleModelName() {
+        return MODEL_ATTRIBUTE_SINGLE;
     }
 }

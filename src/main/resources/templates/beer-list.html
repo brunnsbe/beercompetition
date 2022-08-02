@@ -37,10 +37,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="b : ${currentBeers}">
+        <tr th:each="b : ${beers}">
             <td>
                 <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
-                <a class="btn btn-primary" role="button" th:data-href="@{edit/{id}(id=${b.id})}">Edit</a>
+                <a class="btn btn-primary" role="button" th:href="@{edit/{id}(id=${b.id})}">Edit</a>
             </td>
             <td th:text="${b.competitionCategory.competition.name}"></td>
             <td th:text="${b.competitionCategory.name}"></td>
