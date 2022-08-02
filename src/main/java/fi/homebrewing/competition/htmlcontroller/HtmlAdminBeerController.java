@@ -15,9 +15,7 @@ import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
 import fi.homebrewing.competition.domain.Competitor;
 import fi.homebrewing.competition.domain.CompetitorRepository;
-import org.springframework.data.domain.Example;
 import org.springframework.data.repository.query.Param;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +23,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * TODO:
+ * // Categories per competition
+ * // Beer styles per category
+ */
 
 @Controller
 @RequestMapping("/admin/beers")
@@ -53,17 +57,23 @@ public class HtmlAdminBeerController {
 
         model.addAttribute("activePage", "/admin/beers");
 
+        final List<Beer> allBeers = beerRepository.findAll();
+
         // Filters
         model.addAttribute(
             "competitions",
-            competitionRepository.getCompetitionsSortedByName(null)
+            allBeers.stream()
+                .map(Beer::getCompetitionCategory)
+                .map(CompetitionCategory::getCompetition)
+                .distinct()
+                .sorted(Comparator.comparing(Competition::getName))
+                .toList()
         );
         model.addAttribute("competition", competition);
 
         // TODO: Add filter for category
 
         // Table
-        final List<Beer> allBeers = beerRepository.findAll();
         model.addAttribute(
             "currentBeers",
             allBeers.stream().filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategory().getCompetition())).toList()

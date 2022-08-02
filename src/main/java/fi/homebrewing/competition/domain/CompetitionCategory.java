@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -23,16 +24,19 @@ public class CompetitionCategory {
     private String description;
     @ManyToOne(optional = false)
     private Competition competition;
-    @OneToMany(mappedBy="competitionCategory")
+    @ManyToMany
+    private Set<BeerStyle> beerStyles;
+    @OneToMany(mappedBy="competitionCategory") // TODO: Is this mappedBy needed?
     private Set<Beer> beers;
 
     public CompetitionCategory() {
     }
 
-    public CompetitionCategory(String name, String description, Competition competition) {
+    public CompetitionCategory(String name, String description, Competition competition, Set<BeerStyle> beerStyles) {
         this.name = name;
         this.description = description;
         this.competition = competition;
+        this.beerStyles = beerStyles;
     }
 
     public UUID getId() {
@@ -74,5 +78,13 @@ public class CompetitionCategory {
     @Transient
     public String getCompetitionAndName() {
         return competition.getName() + " \\ " + name;
+    }
+
+    public Set<BeerStyle> getBeerStyles() {
+        return beerStyles;
+    }
+
+    public void setBeerStyles(Set<BeerStyle> beerStyles) {
+        this.beerStyles = beerStyles;
     }
 }

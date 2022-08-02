@@ -4,7 +4,7 @@
 <body>
 <nav th:replace="fragments/navbar"></nav>
 
-<div class="container-fluid" th:unless="${#lists.isEmpty(competitions)}">
+<div class="container-fluid">
     <div class="row">
         <div class="col">
             <br/>
@@ -48,8 +48,8 @@
             <td th:text="${c.description}"></td>
             <td th:text="${c.type}"></td>
             <td th:text="${c.competitionCategories.size}"></td>
-            <td th:text="${c.beers.size}"></td>
-            <td th:text="${c.competitors.size}"></td>
+            <td><a th:text="${c.beers.size}" th:href="@{../beers/(competition=${c.id})}"></a></td>
+            <td><a th:text="${c.competitors.size}" th:href="@{../competitors/(competition=${c.id})}"></a></td>
             <td></td>
         </tr>
         </tbody>

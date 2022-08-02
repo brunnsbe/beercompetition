@@ -15,10 +15,10 @@
 
     <form class="row gy-2 gx-3 align-items-center" id="filterForm" th:action="@{''}">
         <div class="col-auto">
-            <label for="competition" class="col-sm-2 col-form-label">Competition</label>
-            <select name="competition" id="competition" class="form-select">
+            <label for="competitionCategory" class="col-sm-2 col-form-label">Competition category</label>
+            <select name="competitionCategory" id="competitionCategory" class="form-select">
                 <option value="">All</option>
-                <option th:each="c : ${competitions}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id} == ${competition.id}"></option>
+                <option th:each="c : ${competitionCategories}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id} == ${competitionCategory.id}"></option>
             </select>
         </div>
     </form>
@@ -27,28 +27,19 @@
         <thead>
         <tr>
             <th scope="col"></th>
-            <th scope="col">Competition</th>
-            <th scope="col">Category</th>
-            <th scope="col">Competitor</th>
             <th scope="col">Name</th>
-            <th scope="col">Style</th>
-            <th scope="col">Alcohol percentage</th>
-            <th scope="col">Comment</th>
+            <th scope="col">Description</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="b : ${currentBeers}">
+        <tr th:each="b : ${beerStyles}">
             <td>
+                <!-- TODO: Only show delete when possible -->
                 <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
                 <a class="btn btn-primary" role="button" th:data-href="@{edit/{id}(id=${b.id})}">Edit</a>
             </td>
-            <td th:text="${b.competitionCategory.competition.name}"></td>
-            <td th:text="${b.competitionCategory.name}"></td>
-            <td th:text="${b.competitor.fullName}"></td>
             <td th:text="${b.name}"></td>
-            <td th:text="${b.style}"></td>
-            <td th:text="${b.alcoholPercentage}"></td>
-            <td th:text="${b.comment}"></td>
+            <td th:text="${b.description}"></td>
         </tr>
         </tbody>
     </table>

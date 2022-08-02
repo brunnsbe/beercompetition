@@ -4,10 +4,10 @@
 <body>
 <nav th:replace="fragments/navbar"></nav>
 <div class="container-fluid">
-    <h3>Edit competition</h3>
+    <h3>Edit beer style</h3>
     <form action="#"
-          th:action="@{/admin/competitions/upsert/{id}(id=${competition.id})}"
-          th:object="${competition}"
+          th:action="@{/admin/beer-styles/upsert/{id}(id=${beerStyle.id})}"
+          th:object="${beerStyle}"
           method="post">
 
         <div class="mb-3">
@@ -18,20 +18,11 @@
 
         <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <input type="text" th:field="*{description}" id="description" placeholder="Description" class="form-control">
+            <input type="text" th:field="*{description}" id="description" placeholder="description" class="form-control">
             <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
         </div>
 
-        <div class="mb-3">
-            <label for="type" class="form-label">Type</label>
-            <select th:field="*{type}" id="type" class="form-select">
-                <option th:each="type : ${T(fi.homebrewing.competition.domain.Competition.Type).values()}" th:value="${type}" th:text="${type}">
-                </option>
-            </select>
-            <span th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></span>
-        </div>
-
-        <input type="submit" th:value="${competition.id} ? 'Update competition' : 'Insert competition'" class="btn btn-primary">
+        <input type="submit" th:value="${id} ? 'Update beer style' : 'Insert beer style'" class="btn btn-primary">
         <a class="btn btn-secondary" role="button" th:href="${activePage}">Cancel</a>
     </form>
 </div>

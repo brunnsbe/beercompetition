@@ -12,9 +12,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav" th:name="${activePage}">
-                <a th:class="${activePage == '/admin/competitions'} ? 'nav-link active' : 'nav-link'" href="/admin/competitions/">Competitions</a>
-                <a th:class="${activePage == '/admin/competitors'} ? 'nav-link active' : 'nav-link'" href="/admin/competitors/">Competitors</a>
-                <a th:class="${activePage == '/admin/beers'} ? 'nav-link active' : 'nav-link'" href="/admin/beers/">Beers</a>
+                <a th:class="${activePage == '/admin/competitions/'} ? 'nav-link active' : 'nav-link'" href="/admin/competitions/">Competitions</a>
+                <a th:class="${activePage == '/admin/competition-categories/'} ? 'nav-link active' : 'nav-link'" href="/admin/competition-categories/">Competition categories</a>
+                <a th:class="${activePage == '/admin/beer-styles/'} ? 'nav-link active' : 'nav-link'" href="/admin/beer-styles/">Beer styles</a>
+                <a th:class="${activePage == '/admin/competitors/'} ? 'nav-link active' : 'nav-link'" href="/admin/competitors/">Competitors</a>
+                <a th:class="${activePage == '/admin/beers/'} ? 'nav-link active' : 'nav-link'" href="/admin/beers/">Beers</a>
             </div>
         </div>
     </div>

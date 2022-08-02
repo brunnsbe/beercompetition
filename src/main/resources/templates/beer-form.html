@@ -54,7 +54,7 @@
         </div>
 
         <input type="submit" th:value="${beer.id} ? 'Update beer' : 'Insert beer'" class="btn btn-primary">
-        <a class="btn btn-secondary" role="button" th:href="@{/admin/beers/}">Cancel</a>
+        <a class="btn btn-secondary" role="button" th:href="${activePage}">Cancel</a>
     </form>
 </div>
 

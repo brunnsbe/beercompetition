@@ -38,7 +38,6 @@ public class Beer {
         this.competitionCategory = competitionCategory;
         this.competitor = competitor;
         this.alcoholPercentage = alcoholPercentage;
-
     }
 
     public UUID getId() {
