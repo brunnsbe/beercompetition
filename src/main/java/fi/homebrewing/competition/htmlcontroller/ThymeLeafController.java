@@ -31,8 +31,8 @@ public abstract class ThymeLeafController {
         return getTemplateList();
     }
 
-    protected <T> String getRowForm(Optional<UUID> oId,
-                                    JpaRepository<T, UUID> repository,
+    protected <T> String getRowForm(Optional<String> oId,
+                                    JpaRepository<T, String> repository,
                                     Model model,
                                     Map<String, ?> modelAttributes,
                                     Supplier<T> newRow) {
@@ -52,7 +52,7 @@ public abstract class ThymeLeafController {
                                    BindingResult result,
                                    Model model,
                                    Supplier<Map<String, ?>> modelAttributes,
-                                   JpaRepository<T, UUID> repository) {
+                                   JpaRepository<T, String> repository) {
         if (result.hasErrors()) {
             addModelAttributes(model, modelAttributes.get());
             return getTemplateForm();
@@ -62,7 +62,7 @@ public abstract class ThymeLeafController {
         return "redirect:" + getActivePage();
     }
 
-    protected <T> String deleteRow(UUID id, JpaRepository<T, UUID> repository) {
+    protected <T> String deleteRow(String id, JpaRepository<T, String> repository) {
         T row = repository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
 

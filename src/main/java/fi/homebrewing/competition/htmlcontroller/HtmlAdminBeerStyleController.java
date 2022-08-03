@@ -40,7 +40,7 @@ public class HtmlAdminBeerStyleController extends ThymeLeafController {
 
         final Map<String, ?> modelAttributes = Map.of(
             HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_MULTIPLE,
-            beerStyles.stream().flatMap(v -> v.getCompetitionCategories().stream()).distinct().sorted().toList(),
+            List.of(), //beerStyles.stream().flatMap(v -> v.getCompetitionCategories().stream()).distinct().sorted().toList(),
             HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_SINGLE,
             competitionCategory,
             MODEL_ATTRIBUTE_MULTIPLE,
@@ -51,14 +51,14 @@ public class HtmlAdminBeerStyleController extends ThymeLeafController {
     }
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
-    public String getBeerStyleForm(@PathVariable("id") Optional<UUID> oId,
+    public String getBeerStyleForm(@PathVariable("id") Optional<String> oId,
                                    Model model) {
 
         return getRowForm(oId, beerStyleRepository, model, Map.of(), BeerStyle::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
-    public String upsertBeerStyle(@PathVariable("id") Optional<UUID> oId,
+    public String upsertBeerStyle(@PathVariable("id") Optional<String> oId,
                                   @Valid BeerStyle beerStyle,
                                   BindingResult result,
                                   Model model) {
@@ -68,7 +68,7 @@ public class HtmlAdminBeerStyleController extends ThymeLeafController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteCompetition(@PathVariable("id") UUID id) {
+    public String deleteCompetition(@PathVariable("id") String id) {
         return deleteRow(id, beerStyleRepository);
     }
 

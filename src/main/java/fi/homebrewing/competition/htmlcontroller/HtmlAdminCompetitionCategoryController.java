@@ -62,7 +62,7 @@ public class HtmlAdminCompetitionCategoryController extends ThymeLeafController 
     }
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
-    public String getCompetitionCategoryForm(@PathVariable("id") Optional<UUID> oId, Model model) {
+    public String getCompetitionCategoryForm(@PathVariable("id") Optional<String> oId, Model model) {
         final Map<String, ?> modelAttributes = Map.of(
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
             competitionRepository.findAll((Competition.Type)null),
@@ -74,7 +74,7 @@ public class HtmlAdminCompetitionCategoryController extends ThymeLeafController 
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
-    public String upsert(@PathVariable("id") Optional<UUID> oId, @Valid CompetitionCategory competitionCategory, BindingResult result, Model model) {
+    public String upsert(@PathVariable("id") Optional<String> oId, @Valid CompetitionCategory competitionCategory, BindingResult result, Model model) {
         oId.ifPresent(competitionCategory::setId);
 
         final Supplier<Map<String, ?>> modelAttributes = () -> Map.of(
@@ -88,7 +88,7 @@ public class HtmlAdminCompetitionCategoryController extends ThymeLeafController 
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") UUID id) {
+    public String delete(@PathVariable("id") String id) {
         return deleteRow(id, competitionCategoryRepository);
     }
 

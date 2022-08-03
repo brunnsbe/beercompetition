@@ -3,31 +3,37 @@ package fi.homebrewing.competition.domain;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class CompetitionCategory {
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "uuid")
-    private UUID id;
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    private String id;
     @NotBlank(message = "{name.mandatory}")
     private String name;
     private String description;
     @ManyToOne(optional = false)
     private Competition competition;
-    @ManyToMany
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "competition_category_has_beer_style",
+        joinColumns = @JoinColumn(name = "competition_category_id"),
+        inverseJoinColumns = @JoinColumn(name = "beer_style_id"))
     private Set<BeerStyle> beerStyles;
-    @OneToMany(mappedBy = "competitionCategory") // TODO: Is this mappedBy needed?
-    private Set<Beer> beers;
 
     public CompetitionCategory() {
     }
@@ -39,11 +45,11 @@ public class CompetitionCategory {
         this.beerStyles = beerStyles;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -69,10 +75,6 @@ public class CompetitionCategory {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Set<Beer> getBeers() {
-        return beers;
     }
 
     @Transient

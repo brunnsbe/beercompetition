@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.Nullable;
 
-public interface CompetitionRepository extends JpaRepository<Competition, UUID> {
+public interface CompetitionRepository extends JpaRepository<Competition, String> {
     default List<Competition> findAll(@Nullable Competition.Type type) {
         final Competition competition = new Competition();
         competition.setType(type);

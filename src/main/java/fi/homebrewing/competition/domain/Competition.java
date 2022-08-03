@@ -15,14 +15,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.lang.Nullable;
 
 @Entity
 public class Competition {
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "uuid")
-    private UUID id;
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    private String id;
     @NotBlank(message = "{name.mandatory}")
     private String name;
     @Nullable
@@ -55,11 +56,11 @@ public class Competition {
         this.deadlineDate = deadlineDate;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -94,11 +95,25 @@ public class Competition {
 
     @Transient
     public Set<Beer> getBeers() {
-        return competitionCategories.stream().flatMap(v -> v.getBeers().stream()).collect(Collectors.toSet());
+        return Set.of();
+        // ERROR
+        /*
+        return competitionCategories.stream()
+            .flatMap(v -> v.getCompetitionCategoryHasBeerStyles().stream())
+            .flatMap(v -> v.getBeers().stream())
+            .collect(Collectors.toSet());
+         */
     }
 
     @Transient
     public Set<Competitor> getCompetitors() {
-        return competitionCategories.stream().flatMap(v -> v.getBeers().stream()).map(Beer::getCompetitor).collect(Collectors.toSet());
+        return Set.of();
+        // ERROR
+        /*
+        return competitionCategories.stream()
+            .flatMap(v -> v.getCompetitionCategoryHasBeerStyles().stream())
+            .flatMap(v -> v.getBeers().stream()).map(Beer::getCompetitor)
+            .collect(Collectors.toSet());
+         */
     }
 }

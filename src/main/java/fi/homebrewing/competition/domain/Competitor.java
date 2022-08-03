@@ -1,23 +1,26 @@
 package fi.homebrewing.competition.domain;
 
 
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.lang.Nullable;
 
 @Entity
 public class Competitor {
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "uuid")
-    private UUID id;
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    private String id;
     @Nullable
     private String firstName;
     @NotBlank(message = "{name.mandatory}")
@@ -28,6 +31,9 @@ public class Competitor {
     private String phoneNumber;
     @NotBlank(message = "{emailAddress.mandatory}")
     private String emailAddress;
+
+    @OneToMany(mappedBy = "competitor")
+    private Set<Beer> beers;
 
     public Competitor() {
     }
@@ -40,11 +46,11 @@ public class Competitor {
         this.emailAddress = emailAddress;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -95,5 +101,13 @@ public class Competitor {
         return lastName
             + (firstName == null || firstName.isBlank() ? "" : ", " + firstName)
             + " (" + location + ")";
+    }
+
+    public Set<Beer> getBeers() {
+        return beers;
+    }
+
+    public void setBeers(Set<Beer> beers) {
+        this.beers = beers;
     }
 }

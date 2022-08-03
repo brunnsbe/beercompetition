@@ -7,7 +7,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CompetitionCategoryRepository extends JpaRepository<CompetitionCategory, UUID> {
+public interface CompetitionCategoryRepository extends JpaRepository<CompetitionCategory, String> {
     default List<CompetitionCategory> findAll(Competition competition) {
         final CompetitionCategory competitionCategory = new CompetitionCategory();
         competitionCategory.setCompetition(competition);

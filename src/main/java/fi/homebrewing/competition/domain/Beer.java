@@ -10,14 +10,14 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 public class Beer {
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "uuid")
-    private UUID id;
-    @ManyToOne(optional = false)
-    private CompetitionCategory competitionCategory;
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    private String id;
     @ManyToOne(optional = false)
     private Competitor competitor;
     @NotBlank(message = "{name.mandatory}")
@@ -29,23 +29,27 @@ public class Beer {
     @Max(value = 30)
     private Double alcoholPercentage;
 
+    @org.hibernate.annotations.ForeignKey(name = "none") // IS THIS OKAY AS WE GET THE FOREIGN KEY CHECK IN WRONG ORDER !?
+    @ManyToOne(optional = false)
+    private CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle;
+
     public Beer() {
     }
 
-    public Beer(String name, String style, String comment, CompetitionCategory competitionCategory, Competitor competitor, Double alcoholPercentage) {
+    public Beer(String name, String style, String comment, CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle, Competitor competitor, Double alcoholPercentage) {
         this.name = name;
         this.style = style;
         this.comment = comment;
-        this.competitionCategory = competitionCategory;
+        this.competitionCategoryHasBeerStyle = competitionCategoryHasBeerStyle;
         this.competitor = competitor;
         this.alcoholPercentage = alcoholPercentage;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -89,11 +93,15 @@ public class Beer {
         this.competitor = competitor;
     }
 
-    public CompetitionCategory getCompetitionCategory() {
-        return competitionCategory;
+    public CompetitionCategoryHasBeerStyle getCompetitionCategoryHasBeerStyle() {
+        return competitionCategoryHasBeerStyle;
     }
 
-    public void setCompetitionCategory(CompetitionCategory competitionCategory) {
-        this.competitionCategory = competitionCategory;
+    public void setCompetitionCategoryHasBeerStyle(CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle) {
+        this.competitionCategoryHasBeerStyle = competitionCategoryHasBeerStyle;
+    }
+
+    public CompetitionCategory getCompetitionCategory() {
+        return this.competitionCategoryHasBeerStyle.getCompetitionCategory();
     }
 }

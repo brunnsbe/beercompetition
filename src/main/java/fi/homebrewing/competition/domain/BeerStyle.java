@@ -3,6 +3,7 @@ package fi.homebrewing.competition.domain;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,48 +11,35 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 public class BeerStyle {
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "uuid")
-    private UUID id;
-    @ManyToMany
-    /*
-    @JoinTable(
-        name = "BeerStyleHasCompetitionCategory",
-        joinColumns = @JoinColumn(name = "beerStyleId"),
-        inverseJoinColumns = @JoinColumn(name = "competitionCategoryId")
-    )
-     */
-    private Set<CompetitionCategory> competitionCategories;
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    private String id;
     @NotBlank(message = "{name.mandatory}")
     private String name;
     private String description;
 
+    @ManyToMany(mappedBy = "beerStyles", cascade = CascadeType.MERGE)
+    private Set<CompetitionCategory> competitionCategories;
+
     public BeerStyle() {
     }
 
-    public BeerStyle(Set<CompetitionCategory> competitionCategories, String name, String description) {
-        this.competitionCategories = competitionCategories;
+    public BeerStyle(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public Set<CompetitionCategory> getCompetitionCategories() {
-        return competitionCategories;
-    }
-
-    public void setCompetitionCategories(Set<CompetitionCategory> competitionCategory) {
-        this.competitionCategories = competitionCategory;
     }
 
     public String getName() {

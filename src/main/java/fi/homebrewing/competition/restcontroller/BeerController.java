@@ -31,7 +31,7 @@ public class BeerController {
     }
 
     @GetMapping("/{id}")
-    Optional<Beer> getBeerById(@PathVariable UUID id) {
+    Optional<Beer> getBeerById(@PathVariable String id) {
         return beerRepository.findById(id);
     }
 
@@ -41,14 +41,14 @@ public class BeerController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Beer> putBeer(@PathVariable UUID id, @RequestBody Beer beer) {
+    ResponseEntity<Beer> putBeer(@PathVariable String id, @RequestBody Beer beer) {
         return beerRepository.existsById(id)
             ? new ResponseEntity<>(beerRepository.save(beer), HttpStatus.OK)
             : new ResponseEntity<>(beerRepository.save(beer), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    void deleteBeer(@PathVariable UUID id) {
+    void deleteBeer(@PathVariable String id) {
         beerRepository.deleteById(id);
     }
 }

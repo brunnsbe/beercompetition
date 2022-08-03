@@ -13,6 +13,7 @@ import fi.homebrewing.competition.domain.Beer;
 import fi.homebrewing.competition.domain.BeerRepository;
 import fi.homebrewing.competition.domain.Competition;
 import fi.homebrewing.competition.domain.CompetitionCategory;
+import fi.homebrewing.competition.domain.CompetitionCategoryHasBeerStyle;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.Competitor;
 import fi.homebrewing.competition.domain.CompetitorRepository;
@@ -48,7 +49,6 @@ public class HtmlAdminBeerController extends ThymeLeafController {
         this.beerRepository = beerRepository;
         this.competitionCategoryRepository = competitionCategoryRepository;
         this.competitorRepository = competitorRepository;
-
     }
 
     @GetMapping("/")
@@ -60,7 +60,8 @@ public class HtmlAdminBeerController extends ThymeLeafController {
             // Filters
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
             allBeers.stream()
-                .map(Beer::getCompetitionCategory)
+                .map(Beer::getCompetitionCategoryHasBeerStyle)
+                .map(CompetitionCategoryHasBeerStyle::getCompetitionCategory)
                 .map(CompetitionCategory::getCompetition)
                 .distinct()
                 .sorted(Comparator.comparing(Competition::getName))
@@ -70,7 +71,7 @@ public class HtmlAdminBeerController extends ThymeLeafController {
             // Table
             MODEL_ATTRIBUTE_MULTIPLE,
             allBeers.stream()
-                .filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategory().getCompetition()))
+                .filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategoryHasBeerStyle().getCompetitionCategory().getCompetition()))
                 .toList()
         );
 
@@ -78,7 +79,7 @@ public class HtmlAdminBeerController extends ThymeLeafController {
     }
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
-    public String getRowForm(@PathVariable("id") Optional<UUID> oId, Model model) {
+    public String getRowForm(@PathVariable("id") Optional<String> oId, Model model) {
         final Map<String, ?> modelAttributes = Map.of(
             "competitionCategories",
             competitionCategoryRepository.findAll((Competition)null),
@@ -90,7 +91,7 @@ public class HtmlAdminBeerController extends ThymeLeafController {
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
-    public String upsertBeer(@PathVariable("id") Optional<UUID> oId, @Valid Beer beer, BindingResult result, Model model) {
+    public String upsertBeer(@PathVariable("id") Optional<String> oId, @Valid Beer beer, BindingResult result, Model model) {
         oId.ifPresent(beer::setId);
 
         final Supplier<Map<String, ?>> modelAttributes = () -> Map.of(
@@ -104,7 +105,7 @@ public class HtmlAdminBeerController extends ThymeLeafController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteBeer(@PathVariable("id") UUID id) {
+    public String deleteBeer(@PathVariable("id") String id) {
         return deleteRow(id, beerRepository);
     }
 
