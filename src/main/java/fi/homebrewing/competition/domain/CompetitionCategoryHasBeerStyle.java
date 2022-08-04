@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "competition_category_has_beer_style")
 public class CompetitionCategoryHasBeerStyle {
     @EmbeddedId
-    CompetitionCategoryHasBeerStyleKey competitionCategoryHasBeerStyleKey;
+    private CompetitionCategoryHasBeerStyleKey id;
 
     @ManyToOne
     @MapsId("competitionCategoryId")
@@ -52,4 +52,11 @@ public class CompetitionCategoryHasBeerStyle {
         this.competitionCategory = competitionCategory;
     }
 
+    public CompetitionCategoryHasBeerStyleKey getId() {
+        return id;
+    }
+
+    public void setId(CompetitionCategoryHasBeerStyleKey id) {
+        this.id = id;
+    }
 }

@@ -79,9 +79,9 @@ public record TestDataLoader(BeerRepository beerRepository,
 
         this.beerRepository.saveAll(
             List.of(
-                new Beer("Pale Skin Ale", "American Pale Ale", "", competitionCategoryHasBeerStyles.get(0), competitors.get(0), 5.6d),
-                new Beer("Witsenhäuser", "Kellerbier", "", competitionCategoryHasBeerStyles.get(0), competitors.get(0), 5.1d),
-                new Beer("Ruski IS", "Russian Imperial Stout", "", competitionCategoryHasBeerStyles.get(3), competitors.get(1), 11d)
+                new Beer("Pale Skin Ale", "", competitionCategoryHasBeerStyles.get(0), competitors.get(0), 5.6d),
+                new Beer("Witsenhäuser", "", competitionCategoryHasBeerStyles.get(0), competitors.get(0), 5.1d),
+                new Beer("Ruski IS", "", competitionCategoryHasBeerStyles.get(3), competitors.get(1), 11d)
             )
         );
     }

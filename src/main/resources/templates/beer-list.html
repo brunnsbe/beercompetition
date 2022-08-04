@@ -29,9 +29,9 @@
             <th scope="col"></th>
             <th scope="col">Competition</th>
             <th scope="col">Category</th>
+            <th scope="col">Style</th>
             <th scope="col">Competitor</th>
             <th scope="col">Name</th>
-            <th scope="col">Style</th>
             <th scope="col">Alcohol percentage</th>
             <th scope="col">Comment</th>
         </tr>
@@ -42,11 +42,11 @@
                 <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
                 <a class="btn btn-primary" role="button" th:href="@{edit/{id}(id=${b.id})}">Edit</a>
             </td>
-            <td th:text="${b.competitionCategory.competition.name}"></td>
-            <td th:text="${b.competitionCategory.name}"></td>
+            <td th:text="${b.competitionCategoryHasBeerStyle.competitionCategory.competition.name}"></td>
+            <td th:text="${b.competitionCategoryHasBeerStyle.competitionCategory.name}"></td>
+            <td th:text="${b.competitionCategoryHasBeerStyle.beerStyle.name}"></td>
             <td th:text="${b.competitor.fullName}"></td>
             <td th:text="${b.name}"></td>
-            <td th:text="${b.style}"></td>
             <td th:text="${b.alcoholPercentage}"></td>
             <td th:text="${b.comment}"></td>
         </tr>

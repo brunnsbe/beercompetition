@@ -28,6 +28,11 @@ public class CompetitionCategoryHasBeerStyleKey implements Serializable {
             && Objects.equals(this.beerStyleId, that.beerStyleId);
     }
 
+    @Override
+    public String toString() {
+        return competitionCategoryId + "|" + beerStyleId;
+    }
+
     public String getCompetitionCategoryId() {
         return competitionCategoryId;
     }
@@ -43,4 +48,6 @@ public class CompetitionCategoryHasBeerStyleKey implements Serializable {
     public void setBeerStyleId(String beerStyleId) {
         this.beerStyleId = beerStyleId;
     }
+
+
 }

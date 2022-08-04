@@ -20,25 +20,21 @@ public class Beer {
     private String id;
     @ManyToOne(optional = false)
     private Competitor competitor;
+    @org.hibernate.annotations.ForeignKey(name = "none") // IS THIS OKAY AS WE GET THE FOREIGN KEY CHECK IN WRONG ORDER !?
+    @ManyToOne(optional = false)
+    private CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle;
     @NotBlank(message = "{name.mandatory}")
     private String name;
-    @NotBlank(message = "Style is mandatory")
-    private String style;
     private String comment;
 
     @Max(value = 30)
     private Double alcoholPercentage;
 
-    @org.hibernate.annotations.ForeignKey(name = "none") // IS THIS OKAY AS WE GET THE FOREIGN KEY CHECK IN WRONG ORDER !?
-    @ManyToOne(optional = false)
-    private CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle;
-
     public Beer() {
     }
 
-    public Beer(String name, String style, String comment, CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle, Competitor competitor, Double alcoholPercentage) {
+    public Beer(String name, String comment, CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle, Competitor competitor, Double alcoholPercentage) {
         this.name = name;
-        this.style = style;
         this.comment = comment;
         this.competitionCategoryHasBeerStyle = competitionCategoryHasBeerStyle;
         this.competitor = competitor;
@@ -59,14 +55,6 @@ public class Beer {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getStyle() {
-        return style;
-    }
-
-    public void setStyle(String style) {
-        this.style = style;
     }
 
     public String getComment() {
@@ -99,9 +87,5 @@ public class Beer {
 
     public void setCompetitionCategoryHasBeerStyle(CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle) {
         this.competitionCategoryHasBeerStyle = competitionCategoryHasBeerStyle;
-    }
-
-    public CompetitionCategory getCompetitionCategory() {
-        return this.competitionCategoryHasBeerStyle.getCompetitionCategory();
     }
 }

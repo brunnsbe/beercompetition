@@ -14,6 +14,7 @@ import fi.homebrewing.competition.domain.BeerRepository;
 import fi.homebrewing.competition.domain.Competition;
 import fi.homebrewing.competition.domain.CompetitionCategory;
 import fi.homebrewing.competition.domain.CompetitionCategoryHasBeerStyle;
+import fi.homebrewing.competition.domain.CompetitionCategoryHasBeerStyleRepository;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.Competitor;
 import fi.homebrewing.competition.domain.CompetitorRepository;
@@ -39,15 +40,15 @@ public class HtmlAdminBeerController extends ThymeLeafController {
     protected static final String MODEL_ATTRIBUTE_MULTIPLE = "beers";
 
     private final BeerRepository beerRepository;
-    private final CompetitionCategoryRepository competitionCategoryRepository;
+    private final CompetitionCategoryHasBeerStyleRepository competitionCategoryHasBeerStyleRepository;
     private final CompetitorRepository competitorRepository;
 
     public HtmlAdminBeerController(BeerRepository beerRepository,
-                                   CompetitionCategoryRepository competitionCategoryRepository,
+                                   CompetitionCategoryHasBeerStyleRepository competitionCategoryHasBeerStyleRepository,
                                    CompetitorRepository competitorRepository) {
 
         this.beerRepository = beerRepository;
-        this.competitionCategoryRepository = competitionCategoryRepository;
+        this.competitionCategoryHasBeerStyleRepository = competitionCategoryHasBeerStyleRepository;
         this.competitorRepository = competitorRepository;
     }
 
@@ -81,8 +82,8 @@ public class HtmlAdminBeerController extends ThymeLeafController {
     @GetMapping(value = {"/edit", "/edit/{id}"})
     public String getRowForm(@PathVariable("id") Optional<String> oId, Model model) {
         final Map<String, ?> modelAttributes = Map.of(
-            "competitionCategories",
-            competitionCategoryRepository.findAll((Competition)null),
+            "competitionCategoryHasBeerStyles",
+            competitionCategoryHasBeerStyleRepository.findAll(),
             "competitors",
             getCompetitorsSortedByFullname()
         );
@@ -95,9 +96,9 @@ public class HtmlAdminBeerController extends ThymeLeafController {
         oId.ifPresent(beer::setId);
 
         final Supplier<Map<String, ?>> modelAttributes = () -> Map.of(
-            HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_MULTIPLE,
-            competitionCategoryRepository.findAll((Competition)null),
-            HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
+            "competitionCategoryHasBeerStyles",
+            competitionCategoryHasBeerStyleRepository.findAll(),
+            "competitors",
             getCompetitorsSortedByFullname()
         );
 

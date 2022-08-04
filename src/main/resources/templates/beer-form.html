@@ -11,15 +11,27 @@
           method="post">
 
         <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" th:field="*{name}" id="name" placeholder="Name" class="form-control">
-            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+            <label for="competitionCategoryHasBeerStyle" class="form-label">Competiton, category and style</label>
+            <select th:field="*{competitionCategoryHasBeerStyle}" class="form-select">
+                <option th:each="c : ${competitionCategoryHasBeerStyles}" th:value="${c.id}" th:text="${c.competitionCategory.competition.name} + ' \ ' + ${c.competitionCategory.name} + ' \ '  + ${c.beerStyle.name}">
+                </option>
+            </select>
+            <span th:if="${#fields.hasErrors('competitionCategoryHasBeerStyle')}" th:errors="*{competitionCategoryHasBeerStyle}"></span>
         </div>
 
         <div class="mb-3">
-            <label for="style" class="form-label">Style</label>
-            <input type="text" th:field="*{style}" id="style" placeholder="Style" class="form-control">
-            <span th:if="${#fields.hasErrors('style')}" th:errors="*{style}"></span>
+            <label for="competitor" class="form-label">Competitor</label>
+            <select th:field="*{competitor}" id="competitor" class="form-select">
+                <option th:each="c : ${competitors}" th:value="${c.id}" th:text="${c.fullName}">
+                </option>
+            </select>
+            <span th:if="${#fields.hasErrors('competitor')}" th:errors="*{competitor}"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" th:field="*{name}" id="name" placeholder="Name" class="form-control">
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
         </div>
 
         <div class="mb-3">
@@ -33,24 +45,6 @@
             <input type="number" th:field="*{alcoholPercentage}" id="alcoholPercentage" placeholder="Alcohol percentage"
                    step="0.1" class="form-control">
             <span th:if="${#fields.hasErrors('alcoholPercentage')}" th:errors="*{alcoholPercentage}"></span>
-        </div>
-
-        <div class="mb-3">
-            <label for="competitionCategory" class="form-label">Competition and category</label>
-            <select th:field="*{competitionCategory}" id="competitionCategory" class="form-select">
-                <option th:each="c : ${competitionCategories}" th:value="${c.id}" th:text="${c.competitionAndName}">
-                </option>
-            </select>
-            <span th:if="${#fields.hasErrors('competitionCategory')}" th:errors="*{competitionCategory}"></span>
-        </div>
-
-        <div class="mb-3">
-            <label for="competitor" class="form-label">Competitor</label>
-            <select th:field="*{competitor}" id="competitor" class="form-select">
-                <option th:each="c : ${competitors}" th:value="${c.id}" th:text="${c.fullName}">
-                </option>
-            </select>
-            <span th:if="${#fields.hasErrors('competitor')}" th:errors="*{competitor}"></span>
         </div>
 
         <input type="submit" th:value="${beer.id} ? 'Update beer' : 'Insert beer'" class="btn btn-primary">
