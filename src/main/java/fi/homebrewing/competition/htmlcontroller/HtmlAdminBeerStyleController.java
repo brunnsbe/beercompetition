@@ -61,7 +61,7 @@ public class HtmlAdminBeerStyleController extends ThymeLeafController {
     public String getBeerStyleForm(@PathVariable("id") Optional<String> oId,
                                    Model model) {
 
-        return getRowForm(oId, beerStyleRepository, model, Map.of(), BeerStyle::new);
+        return getRowForm(oId, beerStyleRepository, model, getFormModelAttributes(), BeerStyle::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
@@ -71,7 +71,12 @@ public class HtmlAdminBeerStyleController extends ThymeLeafController {
                                   Model model) {
 
         oId.ifPresent(beerStyle::setId);
-        return upsertRow(beerStyle, result, model, Map::of, beerStyleRepository);
+        return upsertRow(beerStyle, result, model, this::getFormModelAttributes, beerStyleRepository);
+    }
+
+    @Override
+    protected Map<String, ?> getFormModelAttributes() {
+        return Map.of();
     }
 
     @GetMapping("/delete/{id}")

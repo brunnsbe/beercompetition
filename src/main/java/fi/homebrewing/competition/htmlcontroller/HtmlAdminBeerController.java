@@ -11,8 +11,6 @@ import javax.validation.Valid;
 import fi.homebrewing.competition.domain.Beer;
 import fi.homebrewing.competition.domain.BeerRepository;
 import fi.homebrewing.competition.domain.Competition;
-import fi.homebrewing.competition.domain.CompetitionCategory;
-import fi.homebrewing.competition.domain.CompetitionCategoryHasBeerStyle;
 import fi.homebrewing.competition.domain.CompetitionCategoryHasBeerStyleRepository;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
@@ -66,7 +64,7 @@ public class HtmlAdminBeerController extends ThymeLeafController {
         final Map<String, ?> modelAttributes = Map.of(
             // Filters
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
-            competitionRepository.findAllByBeersIsNullOrderByName(),
+            competitionRepository.findAllByCompetitionCategoryIsNotNullOrderByName(),
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE,
             competition,
             // Table
@@ -81,28 +79,23 @@ public class HtmlAdminBeerController extends ThymeLeafController {
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
     public String getRowForm(@PathVariable("id") Optional<String> oId, Model model) {
-        final Map<String, ?> modelAttributes = Map.of(
-            "competitionCategoryHasBeerStyles",
-            competitionCategoryHasBeerStyleRepository.findAll(),
-            HtmlAdminCompetitorController.MODEL_ATTRIBUTE_MULTIPLE,
-            getCompetitorsSortedByFullname()
-        );
-
-        return getRowForm(oId, beerRepository, model, modelAttributes, Beer::new);
+        return getRowForm(oId, beerRepository, model, getFormModelAttributes(), Beer::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
     public String upsertBeer(@PathVariable("id") Optional<String> oId, @Valid Beer beer, BindingResult result, Model model) {
         oId.ifPresent(beer::setId);
+        return upsertRow(beer, result, model, this::getFormModelAttributes, beerRepository);
+    }
 
-        final Supplier<Map<String, ?>> modelAttributes = () -> Map.of(
-            "competitionCategoryHasBeerStyles",
-            competitionCategoryHasBeerStyleRepository.findAll(),
-            HtmlAdminCompetitorController.MODEL_ATTRIBUTE_MULTIPLE,
-            getCompetitorsSortedByFullname()
-        );
-
-        return upsertRow(beer, result, model, modelAttributes, beerRepository);
+    @Override
+    protected Map<String, ?> getFormModelAttributes() {
+     return Map.of(
+         "competitionCategoryHasBeerStyles",
+         competitionCategoryHasBeerStyleRepository.findAll(),
+         HtmlAdminCompetitorController.MODEL_ATTRIBUTE_MULTIPLE,
+         getCompetitorsSortedByFullname()
+     );
     }
 
     @GetMapping("/delete/{id}")

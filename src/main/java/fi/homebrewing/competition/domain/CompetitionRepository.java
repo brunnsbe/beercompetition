@@ -12,5 +12,5 @@ public interface CompetitionRepository extends JpaRepository<Competition, String
 
     @Query("SELECT c FROM Competition c WHERE EXISTS (SELECT 1 FROM CompetitionCategoryHasBeerStyle cchbs " +
         "INNER JOIN CompetitionCategory cc ON cchbs.competitionCategory = cc AND cc.competition = c) ORDER BY c.name")
-    List<Competition> findAllByBeersIsNullOrderByName();
+    List<Competition> findAllByCompetitionCategoryIsNotNullOrderByName();
 }

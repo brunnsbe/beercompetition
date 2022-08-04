@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 
@@ -32,6 +33,9 @@ public class CompetitionCategory {
         joinColumns = @JoinColumn(name = "competition_category_id"),
         inverseJoinColumns = @JoinColumn(name = "beer_style_id"))
     private Set<BeerStyle> beerStyles;
+
+    @OneToMany(mappedBy = "competitionCategory")
+    private Set<CompetitionCategoryHasBeerStyle> competitionCategoryHasBeerStyles;
 
     public CompetitionCategory() {
     }
@@ -86,5 +90,9 @@ public class CompetitionCategory {
 
     public void setBeerStyles(Set<BeerStyle> beerStyles) {
         this.beerStyles = beerStyles;
+    }
+
+    public Set<CompetitionCategoryHasBeerStyle> getCompetitionCategoryHasBeerStyles() {
+        return competitionCategoryHasBeerStyles;
     }
 }

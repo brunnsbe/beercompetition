@@ -20,6 +20,8 @@ public abstract class ThymeLeafController {
 
     public abstract String getSingleModelName();
 
+    protected abstract Map<String, ?> getFormModelAttributes();
+
     public void addModelAttributes(Model model, Map<String, ?> attributes) {
         model.addAllAttributes(attributes);
         model.addAttribute("activePage", getActivePage());

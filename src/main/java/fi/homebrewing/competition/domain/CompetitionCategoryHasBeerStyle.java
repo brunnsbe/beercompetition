@@ -1,11 +1,16 @@
 package fi.homebrewing.competition.domain;
 
+import java.util.Set;
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.springframework.lang.Nullable;
 
 @Entity
 @Table(name = "competition_category_has_beer_style")
@@ -18,14 +23,13 @@ public class CompetitionCategoryHasBeerStyle {
     @JoinColumn(name = "competition_category_id")
     private CompetitionCategory competitionCategory;
 
-
     @ManyToOne
     @MapsId("beerStyleId")
     @JoinColumn(name = "beer_style_id")
     private BeerStyle beerStyle;
 
-    //@OneToMany(mappedBy = "competitionCategoryHasBeerStyle")
-    //private Set<Beer> beers;
+    @OneToMany(mappedBy = "competitionCategoryHasBeerStyle")
+    private Set<Beer> beers;
 
     public CompetitionCategoryHasBeerStyle() {
     }
@@ -57,5 +61,9 @@ public class CompetitionCategoryHasBeerStyle {
 
     public void setId(CompetitionCategoryHasBeerStyleKey id) {
         this.id = id;
+    }
+
+    public Set<Beer> getBeers() {
+        return beers;
     }
 }

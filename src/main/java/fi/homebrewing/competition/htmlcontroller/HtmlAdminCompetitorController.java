@@ -60,14 +60,19 @@ public class HtmlAdminCompetitorController extends ThymeLeafController {
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
     public String getCompetitorForm(@PathVariable("id") Optional<String> oId, Model model) {
-        return getRowForm(oId, competitorRepository, model, Map.of(), Competitor::new);
+        return getRowForm(oId, competitorRepository, model, getFormModelAttributes(), Competitor::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
     public String upsertCompetitor(@PathVariable("id") Optional<String> oId, @Valid Competitor competitor, BindingResult result, Model model) {
         oId.ifPresent(competitor::setId);
 
-        return upsertRow(competitor, result, model, Map::of, competitorRepository);
+        return upsertRow(competitor, result, model, this::getFormModelAttributes, competitorRepository);
+    }
+
+    @Override
+    protected Map<String, ?> getFormModelAttributes() {
+        return Map.of();
     }
 
     @GetMapping("/delete/{id}")

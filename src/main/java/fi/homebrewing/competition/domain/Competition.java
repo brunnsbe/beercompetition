@@ -2,6 +2,7 @@ package fi.homebrewing.competition.domain;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -93,14 +94,9 @@ public class Competition {
 
     @Transient
     public Set<Beer> getBeers() {
-        return Set.of();
-        // ERROR
-        /*
-        return competitionCategories.stream()
-            .flatMap(v -> v.getCompetitionCategoryHasBeerStyles().stream())
+        return competitionCategories.stream().flatMap(v -> v.getCompetitionCategoryHasBeerStyles().stream())
             .flatMap(v -> v.getBeers().stream())
             .collect(Collectors.toSet());
-         */
     }
 
     @Transient

@@ -46,11 +46,7 @@ public class HtmlAdminCompetitionCategoryController extends ThymeLeafController 
 
         final Map<String, ?> modelAttributes = Map.of(
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
-            competitionCategoryRepository.findAll((Competition)null)
-                .stream()
-                .map(CompetitionCategory::getCompetition)
-                .distinct()
-                .toList(),
+            competitionRepository.findAllByCompetitionCategoryIsNotNullOrderByName(),
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE,
             competition,
             MODEL_ATTRIBUTE_MULTIPLE,
@@ -62,28 +58,24 @@ public class HtmlAdminCompetitionCategoryController extends ThymeLeafController 
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
     public String getCompetitionCategoryForm(@PathVariable("id") Optional<String> oId, Model model) {
-        final Map<String, ?> modelAttributes = Map.of(
-            HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
-            competitionRepository.findAllByTypeOrderByName((Competition.Type)null),
-            HtmlAdminBeerStyleController.MODEL_ATTRIBUTE_MULTIPLE,
-            beerStyleRepository.findAll() // TODO: Sort needed
-        );
-
-        return getRowForm(oId, competitionCategoryRepository, model, modelAttributes, CompetitionCategory::new);
+        return getRowForm(oId, competitionCategoryRepository, model, getFormModelAttributes(), CompetitionCategory::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
     public String upsert(@PathVariable("id") Optional<String> oId, @Valid CompetitionCategory competitionCategory, BindingResult result, Model model) {
         oId.ifPresent(competitionCategory::setId);
 
-        final Supplier<Map<String, ?>> modelAttributes = () -> Map.of(
+        return upsertRow(competitionCategory, result, model, this::getFormModelAttributes, competitionCategoryRepository);
+    }
+
+    @Override
+    protected Map<String, ?> getFormModelAttributes() {
+        return Map.of(
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
             competitionRepository.findAllByOrderByName(),
             HtmlAdminBeerStyleController.MODEL_ATTRIBUTE_MULTIPLE,
-            beerStyleRepository.findAll() // TODO: Sort needed
+            beerStyleRepository.findAllByOrderByName()
         );
-
-        return upsertRow(competitionCategory, result, model, modelAttributes, competitionCategoryRepository);
     }
 
     @GetMapping("/delete/{id}")
