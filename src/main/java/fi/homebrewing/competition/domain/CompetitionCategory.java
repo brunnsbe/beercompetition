@@ -1,10 +1,8 @@
 package fi.homebrewing.competition.domain;
 
 import java.util.Set;
-import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,8 +18,8 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 public class CompetitionCategory {
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
     @NotBlank(message = "{name.mandatory}")
     private String name;

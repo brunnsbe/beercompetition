@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 import javax.validation.Valid;
@@ -16,6 +15,7 @@ import fi.homebrewing.competition.domain.CompetitionCategory;
 import fi.homebrewing.competition.domain.CompetitionCategoryHasBeerStyle;
 import fi.homebrewing.competition.domain.CompetitionCategoryHasBeerStyleRepository;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
+import fi.homebrewing.competition.domain.CompetitionRepository;
 import fi.homebrewing.competition.domain.Competitor;
 import fi.homebrewing.competition.domain.CompetitorRepository;
 import org.springframework.data.repository.query.Param;
@@ -42,14 +42,20 @@ public class HtmlAdminBeerController extends ThymeLeafController {
     private final BeerRepository beerRepository;
     private final CompetitionCategoryHasBeerStyleRepository competitionCategoryHasBeerStyleRepository;
     private final CompetitorRepository competitorRepository;
+    private final CompetitionCategoryRepository competitionCategoryRepository;
+    private final CompetitionRepository competitionRepository;
 
     public HtmlAdminBeerController(BeerRepository beerRepository,
                                    CompetitionCategoryHasBeerStyleRepository competitionCategoryHasBeerStyleRepository,
-                                   CompetitorRepository competitorRepository) {
+                                   CompetitorRepository competitorRepository,
+                                   CompetitionCategoryRepository competitionCategoryRepository,
+                                   CompetitionRepository competitionRepository) {
 
         this.beerRepository = beerRepository;
         this.competitionCategoryHasBeerStyleRepository = competitionCategoryHasBeerStyleRepository;
         this.competitorRepository = competitorRepository;
+        this.competitionCategoryRepository = competitionCategoryRepository;
+        this.competitionRepository = competitionRepository;
     }
 
     @GetMapping("/")
@@ -60,13 +66,7 @@ public class HtmlAdminBeerController extends ThymeLeafController {
         final Map<String, ?> modelAttributes = Map.of(
             // Filters
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
-            allBeers.stream()
-                .map(Beer::getCompetitionCategoryHasBeerStyle)
-                .map(CompetitionCategoryHasBeerStyle::getCompetitionCategory)
-                .map(CompetitionCategory::getCompetition)
-                .distinct()
-                .sorted(Comparator.comparing(Competition::getName))
-                .toList(),
+            competitionRepository.findAllByBeersIsNullOrderByName(),
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE,
             competition,
             // Table
@@ -84,7 +84,7 @@ public class HtmlAdminBeerController extends ThymeLeafController {
         final Map<String, ?> modelAttributes = Map.of(
             "competitionCategoryHasBeerStyles",
             competitionCategoryHasBeerStyleRepository.findAll(),
-            "competitors",
+            HtmlAdminCompetitorController.MODEL_ATTRIBUTE_MULTIPLE,
             getCompetitorsSortedByFullname()
         );
 
@@ -98,7 +98,7 @@ public class HtmlAdminBeerController extends ThymeLeafController {
         final Supplier<Map<String, ?>> modelAttributes = () -> Map.of(
             "competitionCategoryHasBeerStyles",
             competitionCategoryHasBeerStyleRepository.findAll(),
-            "competitors",
+            HtmlAdminCompetitorController.MODEL_ATTRIBUTE_MULTIPLE,
             getCompetitorsSortedByFullname()
         );
 

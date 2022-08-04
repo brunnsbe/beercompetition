@@ -2,7 +2,6 @@ package fi.homebrewing.competition.htmlcontroller;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -40,7 +39,7 @@ public class HtmlAdminCompetitionController extends ThymeLeafController {
                 "competitionTypes",
                 competitionRepository.findAll().stream().map(Competition::getType).distinct().sorted().toList(),
                 MODEL_ATTRIBUTE_MULTIPLE,
-                competitionRepository.findAll(competitionType)
+                competitionRepository.findAllByOrderByName()
             );
         } else {
             modelAttributes = Map.of(
@@ -49,7 +48,7 @@ public class HtmlAdminCompetitionController extends ThymeLeafController {
                 "competitionType",
                 competitionType,
                 MODEL_ATTRIBUTE_MULTIPLE,
-                competitionRepository.findAll(competitionType)
+                competitionRepository.findAllByTypeOrderByName(competitionType)
             );
         }
 

@@ -1,7 +1,6 @@
 package fi.homebrewing.competition.restcontroller;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import fi.homebrewing.competition.domain.Beer;
 import fi.homebrewing.competition.domain.BeerRepository;

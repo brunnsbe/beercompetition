@@ -1,8 +1,5 @@
 package fi.homebrewing.competition.domain;
 
-import java.util.UUID;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,12 +12,13 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 public class Beer {
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
     @ManyToOne(optional = false)
     private Competitor competitor;
-    @org.hibernate.annotations.ForeignKey(name = "none") // IS THIS OKAY AS WE GET THE FOREIGN KEY CHECK IN WRONG ORDER !?
+    @org.hibernate.annotations.ForeignKey(name = "none")
+    // IS THIS OKAY AS WE GET THE FOREIGN KEY CHECK IN WRONG ORDER !?
     @ManyToOne(optional = false)
     private CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle;
     @NotBlank(message = "{name.mandatory}")

@@ -1,15 +1,17 @@
 package fi.homebrewing.competition.htmlcontroller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.Set;
 
 import javax.validation.Valid;
 
 import fi.homebrewing.competition.domain.BeerStyle;
 import fi.homebrewing.competition.domain.BeerStyleRepository;
 import fi.homebrewing.competition.domain.CompetitionCategory;
+import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,21 +28,26 @@ public class HtmlAdminBeerStyleController extends ThymeLeafController {
     protected static final String MODEL_ATTRIBUTE_MULTIPLE = "beerStyles";
 
     private final BeerStyleRepository beerStyleRepository;
+    private final CompetitionCategoryRepository competitionCategoryRepository;
 
-    public HtmlAdminBeerStyleController(BeerStyleRepository beerStyleRepository) {
+    public HtmlAdminBeerStyleController(BeerStyleRepository beerStyleRepository,
+                                        CompetitionCategoryRepository competitionCategoryRepository) {
 
         this.beerStyleRepository = beerStyleRepository;
+        this.competitionCategoryRepository = competitionCategoryRepository;
     }
 
     @GetMapping("/")
     public String getBeerStylesList(Model model,
                                     @Param("competitionCategory") CompetitionCategory competitionCategory) {
 
-        final List<BeerStyle> beerStyles = beerStyleRepository.findAll(); // TODO: Add filtering by competition category
+        final List<BeerStyle> beerStyles = competitionCategory.getId() == null
+            ? beerStyleRepository.findAllByOrderByName()
+            : beerStyleRepository.findAllByCompetitionCategoriesInOrderByNameAsc(Set.of(competitionCategory));
 
         final Map<String, ?> modelAttributes = Map.of(
             HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_MULTIPLE,
-            List.of(), //beerStyles.stream().flatMap(v -> v.getCompetitionCategories().stream()).distinct().sorted().toList(),
+            competitionCategoryRepository.findDistinctByBeerStylesIsNotNullOrderByName(),
             HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_SINGLE,
             competitionCategory,
             MODEL_ATTRIBUTE_MULTIPLE,

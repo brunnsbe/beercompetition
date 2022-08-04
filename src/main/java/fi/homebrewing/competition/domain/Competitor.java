@@ -2,9 +2,7 @@ package fi.homebrewing.competition.domain;
 
 
 import java.util.Set;
-import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,8 +16,8 @@ import org.springframework.lang.Nullable;
 @Entity
 public class Competitor {
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
     @Nullable
     private String firstName;

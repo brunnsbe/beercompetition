@@ -2,7 +2,6 @@ package fi.homebrewing.competition.htmlcontroller;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 import javax.validation.Valid;
@@ -65,7 +64,7 @@ public class HtmlAdminCompetitionCategoryController extends ThymeLeafController 
     public String getCompetitionCategoryForm(@PathVariable("id") Optional<String> oId, Model model) {
         final Map<String, ?> modelAttributes = Map.of(
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
-            competitionRepository.findAll((Competition.Type)null),
+            competitionRepository.findAllByTypeOrderByName((Competition.Type)null),
             HtmlAdminBeerStyleController.MODEL_ATTRIBUTE_MULTIPLE,
             beerStyleRepository.findAll() // TODO: Sort needed
         );
@@ -79,7 +78,7 @@ public class HtmlAdminCompetitionCategoryController extends ThymeLeafController 
 
         final Supplier<Map<String, ?>> modelAttributes = () -> Map.of(
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
-            competitionRepository.findAll((Competition.Type)null),
+            competitionRepository.findAllByOrderByName(),
             HtmlAdminBeerStyleController.MODEL_ATTRIBUTE_MULTIPLE,
             beerStyleRepository.findAll() // TODO: Sort needed
         );

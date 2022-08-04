@@ -1,7 +1,6 @@
 package fi.homebrewing.competition.domain;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -14,5 +13,7 @@ public interface CompetitionCategoryRepository extends JpaRepository<Competition
         Example<CompetitionCategory> example = Example.of(competitionCategory);
         return findAll(example, Sort.by(Sort.Direction.ASC, "name"));
     }
+
+    List<CompetitionCategory> findDistinctByBeerStylesIsNotNullOrderByName();
 }
 

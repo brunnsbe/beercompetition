@@ -1,19 +1,16 @@
 package fi.homebrewing.competition.domain;
 
 import java.util.List;
-import java.util.UUID;
 
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.lang.Nullable;
+import org.springframework.data.jpa.repository.Query;
 
 public interface CompetitionRepository extends JpaRepository<Competition, String> {
-    default List<Competition> findAll(@Nullable Competition.Type type) {
-        final Competition competition = new Competition();
-        competition.setType(type);
-        Example<Competition> competitionExample = Example.of(competition);
+    List<Competition> findAllByOrderByName();
 
-        return findAll(competitionExample, Sort.by(Sort.Direction.ASC, "name"));
-    }
+    List<Competition> findAllByTypeOrderByName(Competition.Type type);
+
+    @Query("SELECT c FROM Competition c WHERE EXISTS (SELECT 1 FROM CompetitionCategoryHasBeerStyle cchbs " +
+        "INNER JOIN CompetitionCategory cc ON cchbs.competitionCategory = cc AND cc.competition = c) ORDER BY c.name")
+    List<Competition> findAllByBeersIsNullOrderByName();
 }
