@@ -3,6 +3,7 @@ package fi.homebrewing.competition.domain;
 
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,15 +20,18 @@ public class Competitor {
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
-    @Nullable
+    @NotBlank(message = "{firstName.mandatory}")
     private String firstName;
-    @NotBlank(message = "{name.mandatory}")
+    @NotBlank(message = "{lastName.mandatory}")
     private String lastName;
+    @Nullable
+    private String groupName;
     @NotBlank(message = "{location.mandatory}")
     private String location;
     @Nullable
     private String phoneNumber;
     @NotBlank(message = "{emailAddress.mandatory}")
+    @Column(unique=true)
     private String emailAddress;
 
     @OneToMany(mappedBy = "competitor")
@@ -107,5 +111,14 @@ public class Competitor {
 
     public void setBeers(Set<Beer> beers) {
         this.beers = beers;
+    }
+
+    @Nullable
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(@Nullable String groupName) {
+        this.groupName = groupName;
     }
 }

@@ -2,7 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head"></head>
 <body>
-<nav th:replace="fragments/navbar"></nav>
+<div th:if="${showNavBar == true}">
+    <nav th:replace="fragments/navbar"></nav>
+</div>
+
 <div class="container-fluid">
     <h3>Edit competition category</h3>
     <form action="#"

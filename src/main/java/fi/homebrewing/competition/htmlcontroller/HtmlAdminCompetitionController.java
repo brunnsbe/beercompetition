@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/competitions")
-public class HtmlAdminCompetitionController extends ThymeLeafController {
+public class HtmlAdminCompetitionController extends HtmlAdminController {
     protected static final String MODEL_ATTRIBUTE_SINGLE = "competition";
     protected static final String MODEL_ATTRIBUTE_MULTIPLE = "competitions";
 

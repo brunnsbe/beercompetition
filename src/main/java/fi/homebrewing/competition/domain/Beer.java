@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
@@ -27,6 +28,10 @@ public class Beer {
 
     @Max(value = 30)
     private Double alcoholPercentage;
+
+    private Double ibu;
+
+    private Double ebc;
 
     public Beer() {
     }
@@ -85,5 +90,21 @@ public class Beer {
 
     public void setCompetitionCategoryHasBeerStyle(CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle) {
         this.competitionCategoryHasBeerStyle = competitionCategoryHasBeerStyle;
+    }
+
+    public Double getIbu() {
+        return ibu;
+    }
+
+    public void setIbu(Double ibu) {
+        this.ibu = ibu;
+    }
+
+    public Double getEbc() {
+        return ebc;
+    }
+
+    public void setEbc(Double ebc) {
+        this.ebc = ebc;
     }
 }

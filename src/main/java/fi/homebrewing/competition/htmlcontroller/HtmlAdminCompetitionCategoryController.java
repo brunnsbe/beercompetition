@@ -2,7 +2,6 @@ package fi.homebrewing.competition.htmlcontroller;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import javax.validation.Valid;
 
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/competition-categories")
-public class HtmlAdminCompetitionCategoryController extends ThymeLeafController {
+public class HtmlAdminCompetitionCategoryController extends HtmlAdminController {
     protected static final String MODEL_ATTRIBUTE_SINGLE = "competitionCategory";
     protected static final String MODEL_ATTRIBUTE_MULTIPLE = "competitionCategories";
 

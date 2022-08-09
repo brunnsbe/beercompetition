@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"></head>
+<body>
+<div th:if="${showNavBar == true}">
+    <nav th:replace="fragments/navbar"></nav>
+</div>
+
+<div class="container-fluid">
+    <h3>Edit competitor</h3>
+
+    <div class="mb-3" th:if="${competition != null}">
+        <input type="text" disabled="disabled" th:field="*{competition.name}" id="competition" placeholder="competition" class="form-control">
+    </div>
+
+    <form action="#"
+          th:action="${competition != null} ? @{/registration/competition/{competitionId}/person/upsert/{competitorId}(competitionId=${competition.id},competitorId=${competitor.id})} : @{/admin/competitors/upsert/{id}(id=${competitor.id})}"
+          th:object="${competitor}"
+          method="post">
+
+        <div class="mb-3">
+            <label for="firstName" class="form-label">First name</label>
+            <input type="text" th:field="*{firstName}" id="firstName" placeholder="First name" class="form-control">
+            <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Last name</label>
+            <input type="text" th:field="*{lastName}" id="lastName" placeholder="Last name" class="form-control">
+            <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="groupName" class="form-label">Optional group or brewery name</label>
+            <input type="text" th:field="*{groupName}" id="groupName" placeholder="Optional group or brewery name" class="form-control">
+            <span th:if="${#fields.hasErrors('groupName')}" th:errors="*{groupName}"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" th:field="*{location}" id="location" placeholder="location" class="form-control">
+            <span th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="phoneNumber" class="form-label">Phone number</label>
+            <input type="text" th:field="*{phoneNumber}" id="phoneNumber" placeholder="phoneNumber" class="form-control">
+            <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="emailAddress" class="form-label">Email address</label>
+            <input type="text" th:field="*{emailAddress}" id="emailAddress" placeholder="emailAddress" class="form-control">
+            <span th:if="${#fields.hasErrors('emailAddress')}" th:errors="*{emailAddress}"></span>
+        </div>
+
+        <input type="submit" th:value="Save" class="btn btn-primary">
+        <a class="btn btn-secondary" role="button" th:href="${activePage}">Cancel</a>
+    </form>
+</div>
+
+</body>
+</html>

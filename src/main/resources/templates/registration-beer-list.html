@@ -2,9 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head"></head>
 <body>
-<div th:if="${showNavBar == true}">
-    <nav th:replace="fragments/navbar"></nav>
-</div>
 
 <nav class="navbar navbar-light bg-light" th:unless="${showFilters == true}" th:if="${competition != null}">
     <div class="container-fluid">
@@ -13,28 +10,21 @@
 </nav>
 
 <div class="container-fluid">
+    <br>
+
     <div class="row">
         <div class="col">
-            <br/>
             <a class="btn btn-primary" role="button" th:href="@{edit/}">Add new beer</a>
+            <a class="btn btn-primary" role="button" th:href="@{../edit/}">Edit own details</a>
         </div>
     </div>
 
-    <form class="row gy-2 gx-3 align-items-center" id="filterForm" th:action="@{''}" th:if="${showFilters == true}">
-        <div class="col-auto">
-            <label for="competition" class="col-sm-2 col-form-label">Competition</label>
-            <select name="competition" id="competition" class="form-select">
-                <option value="">All</option>
-                <option th:each="c : ${competitions}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id} == ${competition.id}"></option>
-            </select>
-        </div>
-    </form>
+    <hr>
 
     <table class="table">
         <thead>
         <tr>
             <th scope="col"></th>
-            <th scope="col">Competition</th>
             <th scope="col">Category</th>
             <th scope="col">Style</th>
             <th scope="col">Competitor</th>
@@ -51,7 +41,6 @@
                 <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
                 <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${b.id})}">Edit</a>
             </td>
-            <td th:text="${b.competitionCategoryHasBeerStyle.competitionCategory.competition.name}"></td>
             <td th:text="${b.competitionCategoryHasBeerStyle.competitionCategory.name}"></td>
             <td th:text="${b.competitionCategoryHasBeerStyle.beerStyle.name}"></td>
             <td th:text="${b.competitor.fullName}"></td>

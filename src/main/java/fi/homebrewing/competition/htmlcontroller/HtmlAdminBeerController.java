@@ -1,10 +1,8 @@
 package fi.homebrewing.competition.htmlcontroller;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import javax.validation.Valid;
 
@@ -14,7 +12,6 @@ import fi.homebrewing.competition.domain.Competition;
 import fi.homebrewing.competition.domain.CompetitionCategoryHasBeerStyleRepository;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
-import fi.homebrewing.competition.domain.Competitor;
 import fi.homebrewing.competition.domain.CompetitorRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
@@ -33,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/beers")
-public class HtmlAdminBeerController extends ThymeLeafController {
+public class HtmlAdminBeerController extends HtmlAdminController {
     protected static final String MODEL_ATTRIBUTE_SINGLE = "beer";
     protected static final String MODEL_ATTRIBUTE_MULTIPLE = "beers";
 
@@ -94,19 +91,13 @@ public class HtmlAdminBeerController extends ThymeLeafController {
          "competitionCategoryHasBeerStyles",
          competitionCategoryHasBeerStyleRepository.findAll(),
          HtmlAdminCompetitorController.MODEL_ATTRIBUTE_MULTIPLE,
-         getCompetitorsSortedByFullname()
+         competitorRepository.findAllByOrderByLastNameAscFirstNameAsc()
      );
     }
 
     @GetMapping("/delete/{id}")
     public String deleteBeer(@PathVariable("id") String id) {
         return deleteRow(id, beerRepository);
-    }
-
-    private List<Competitor> getCompetitorsSortedByFullname() {
-        final List<Competitor> competitors = competitorRepository.findAll();
-        competitors.sort(Comparator.comparing(Competitor::getFullName));
-        return competitors;
     }
 
     @Override

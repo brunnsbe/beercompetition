@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
-public abstract class ThymeLeafController {
-    public ThymeLeafController() {
+public abstract class HtmlAdminController {
+    public HtmlAdminController() {
     }
 
     public abstract String getTemplateList();
@@ -25,6 +25,8 @@ public abstract class ThymeLeafController {
     public void addModelAttributes(Model model, Map<String, ?> attributes) {
         model.addAllAttributes(attributes);
         model.addAttribute("activePage", getActivePage());
+        model.addAttribute("showNavBar", true);
+        model.addAttribute("showFilters", true);
     }
 
     protected String getRowsList(Model model, Map<String, ?> modelAttributes) {

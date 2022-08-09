@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"></head>
+<body>
+
+<div class="container-fluid">
+    <div class="mb-3">
+        <h1 th:text="${competition.getName()}"></h1>
+    </div>
+    <div class="mb-3" th:text="${competition.getIntroductionText()}">
+    </div>
+    <div class="row">
+        <div class="col">
+            <br/>
+            <a class="btn btn-primary" role="button" th:href="@{person/edit/?lang=fi}">Osallistu</a>
+        </div>
+        <div class="col">
+            <br/>
+            <a class="btn btn-primary" role="button" th:href="@{person/edit/?lang=sv}">Delta</a>
+        </div>
+        <div class="col">
+            <br/>
+            <a class="btn btn-primary" role="button" th:href="@{person/edit/?lang=en}">Participate</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

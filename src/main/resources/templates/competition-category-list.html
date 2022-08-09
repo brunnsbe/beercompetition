@@ -2,7 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head"></head>
 <body>
-<nav th:replace="fragments/navbar"></nav>
+<div th:if="${showNavBar == true}">
+    <nav th:replace="fragments/navbar"></nav>
+</div>
 
 <div class="container-fluid">
 
@@ -13,7 +15,7 @@
         </div>
     </div>
 
-    <form class="row gy-2 gx-3 align-items-center" id="filterForm" th:action="@{''}">
+    <form class="row gy-2 gx-3 align-items-center" id="filterForm" th:action="@{''}" th:if="${showFilters == true}">
         <div class="col-auto">
             <label for="competition" class="col-sm-2 col-form-label">Competition</label>
             <select name="competition" id="competition" class="form-select">
@@ -36,8 +38,8 @@
         <tr th:each="c : ${competitionCategories}">
             <td>
                 <!-- TODO: Only show delete when possible -->
-                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}(id=${c.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
-                <a class="btn btn-primary" role="button" th:href="@{edit/{id}(id=${c.id})}">Edit</a>
+                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${c.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
+                <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${c.id})}">Edit</a>
             </td>
             <td th:text="${c.name}"></td>
             <td th:text="${c.competition.name}"></td>

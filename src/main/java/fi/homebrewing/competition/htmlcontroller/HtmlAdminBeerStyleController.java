@@ -1,6 +1,5 @@
 package fi.homebrewing.competition.htmlcontroller;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/beer-styles")
-public class HtmlAdminBeerStyleController extends ThymeLeafController {
+public class HtmlAdminBeerStyleController extends HtmlAdminController {
     protected static final String MODEL_ATTRIBUTE_SINGLE = "beerStyle";
     protected static final String MODEL_ATTRIBUTE_MULTIPLE = "beerStyles";
 

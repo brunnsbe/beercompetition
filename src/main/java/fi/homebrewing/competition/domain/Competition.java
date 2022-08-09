@@ -35,10 +35,20 @@ public class Competition {
     @Column(columnDefinition = "DATE")
     private LocalDate deadlineDate;
 
+    private String introductionText;
+
     @OneToMany(mappedBy = "competition")
     private Set<CompetitionCategory> competitionCategories;
 
     public Competition() {
+    }
+
+    public String getIntroductionText() {
+        return introductionText;
+    }
+
+    public void setIntroductionText(String introductionText) {
+        this.introductionText = introductionText;
     }
 
     public enum Type {

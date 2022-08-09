@@ -2,7 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head"></head>
 <body>
-<nav th:replace="fragments/navbar"></nav>
+<div th:if="${showNavBar == true}">
+    <nav th:replace="fragments/navbar"></nav>
+</div>
+
 <div class="container-fluid">
     <h3>Edit competition</h3>
     <form action="#"
@@ -20,6 +23,12 @@
             <label for="description" class="form-label">Description</label>
             <input type="text" th:field="*{description}" id="description" placeholder="Description" class="form-control">
             <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="introductionText" class="form-label">Introduction text</label>
+            <textarea th:field="*{introductionText}" id="introductionText" placeholder="Introduction text" class="form-control"></textarea>
+            <span th:if="${#fields.hasErrors('introductionText')}" th:errors="*{introductionText}"></span>
         </div>
 
         <div class="mb-3">

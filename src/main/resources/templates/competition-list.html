@@ -2,7 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head"></head>
 <body>
-<nav th:replace="fragments/navbar"></nav>
+<div th:if="${showNavBar == true}">
+    <nav th:replace="fragments/navbar"></nav>
+</div>
 
 <div class="container-fluid">
     <div class="row">
@@ -12,7 +14,7 @@
         </div>
     </div>
 
-    <form class="row gy-2 gx-3 align-items-center" id="filterForm" th:action="@{''}">
+    <form class="row gy-2 gx-3 align-items-center" id="filterForm" th:action="@{''}" th:if="${showFilters == true}">
         <div class="col-auto">
             <label for="competitionType" class="col-sm-2 col-form-label">Type</label>
             <select name="competitionType" id="competitionType" class="form-select">
@@ -32,17 +34,18 @@
             <th scope="col">Categories</th>
             <th scope="col">Beers</th>
             <th scope="col">Competitors</th>
+            <th scope="col">Registration link</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="c : ${competitions}">
             <td>
-                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}(id=${c.id})}"
+                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${c.id})}"
                    th:if="${#lists.isEmpty(c.competitors) && #lists.isEmpty(c.competitionCategories)}"
                    data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
                 <button type="button" class="btn btn-secondary"
                         th:unless="${#lists.isEmpty(c.competitors) && #lists.isEmpty(c.competitionCategories)}" disabled>Delete</button>
-                <a class="btn btn-primary" role="button" th:href="@{edit/{id}(id=${c.id})}">Edit</a>
+                <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${c.id})}">Edit</a>
             </td>
             <td th:text="${c.name}"></td>
             <td th:text="${c.description}"></td>
@@ -50,7 +53,7 @@
             <td th:text="${c.competitionCategories.size}"></td>
             <td><a th:text="${c.beers.size}" th:href="@{../beers/(competition=${c.id})}"></a></td>
             <td><a th:text="${c.competitors.size}" th:href="@{../competitors/(competition=${c.id})}"></a></td>
-            <td></td>
+            <td><a th:href="@{/registration/competition/{id}/(id=${c.id})}" target="_blank">Link</a></td>
         </tr>
         </tbody>
     </table>
