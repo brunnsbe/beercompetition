@@ -2,6 +2,7 @@ package fi.homebrewing.competition.htmlcontroller;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,8 +35,8 @@ public abstract class HtmlAdminController {
         return getTemplateList();
     }
 
-    protected <T> String getRowForm(Optional<String> oId,
-                                    JpaRepository<T, String> repository,
+    protected <T> String getRowForm(Optional<UUID> oId,
+                                    JpaRepository<T, UUID> repository,
                                     Model model,
                                     Map<String, ?> modelAttributes,
                                     Supplier<T> newRow) {
@@ -55,7 +56,7 @@ public abstract class HtmlAdminController {
                                    BindingResult result,
                                    Model model,
                                    Supplier<Map<String, ?>> modelAttributes,
-                                   JpaRepository<T, String> repository) {
+                                   JpaRepository<T, UUID> repository) {
         if (result.hasErrors()) {
             addModelAttributes(model, modelAttributes.get());
             return getTemplateForm();
@@ -65,7 +66,7 @@ public abstract class HtmlAdminController {
         return "redirect:" + getActivePage();
     }
 
-    protected <T> String deleteRow(String id, JpaRepository<T, String> repository) {
+    protected <T> String deleteRow(UUID id, JpaRepository<T, UUID> repository) {
         T row = repository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
 

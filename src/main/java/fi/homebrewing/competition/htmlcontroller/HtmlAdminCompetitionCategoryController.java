@@ -2,6 +2,7 @@ package fi.homebrewing.competition.htmlcontroller;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -56,12 +57,12 @@ public class HtmlAdminCompetitionCategoryController extends HtmlAdminController 
     }
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
-    public String getCompetitionCategoryForm(@PathVariable("id") Optional<String> oId, Model model) {
+    public String getCompetitionCategoryForm(@PathVariable("id") Optional<UUID> oId, Model model) {
         return getRowForm(oId, competitionCategoryRepository, model, getFormModelAttributes(), CompetitionCategory::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
-    public String upsert(@PathVariable("id") Optional<String> oId, @Valid CompetitionCategory competitionCategory, BindingResult result, Model model) {
+    public String upsert(@PathVariable("id") Optional<UUID> oId, @Valid CompetitionCategory competitionCategory, BindingResult result, Model model) {
         oId.ifPresent(competitionCategory::setId);
 
         return upsertRow(competitionCategory, result, model, this::getFormModelAttributes, competitionCategoryRepository);
@@ -78,7 +79,7 @@ public class HtmlAdminCompetitionCategoryController extends HtmlAdminController 
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") String id) {
+    public String delete(@PathVariable("id") UUID id) {
         return deleteRow(id, competitionCategoryRepository);
     }
 

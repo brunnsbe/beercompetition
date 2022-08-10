@@ -3,6 +3,7 @@ package fi.homebrewing.competition.htmlcontroller;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -38,7 +39,7 @@ public class HtmlRegistrationController {
     }
 
     @GetMapping(value = {"/{competitionId}"})
-    public String getCompetitionRegistrationIntroduction(@PathVariable("competitionId") Optional<String> oCompetitionId,
+    public String getCompetitionRegistrationIntroduction(@PathVariable("competitionId") Optional<UUID> oCompetitionId,
                                                          Model model) {
 
         final Competition competition = oCompetitionId.map(id -> {
@@ -52,8 +53,8 @@ public class HtmlRegistrationController {
     }
 
     @GetMapping(value = {"/{competitionId}/person/edit/", "/{competitionId}/person/{personId}/edit/"})
-    public String getCompetitionSingleCompetitorForm(@PathVariable("competitionId") Optional<String> oCompetitionId,
-                                                     @PathVariable("personId") Optional<String> oPersonId,
+    public String getCompetitionSingleCompetitorForm(@PathVariable("competitionId") Optional<UUID> oCompetitionId,
+                                                     @PathVariable("personId") Optional<UUID> oPersonId,
                                                      Model model) {
 
         final Competition competition = oCompetitionId.map(id -> {
@@ -74,8 +75,8 @@ public class HtmlRegistrationController {
     }
 
     @PostMapping(value = {"/{competitionId}/person/upsert", "/{competitionId}/person/upsert/{personId}"})
-    public String upsertCompetitionSingleCompetitor(@PathVariable("competitionId") Optional<String> oCompetitionId,
-                                                    @PathVariable("personId") Optional<String> oPersonId,
+    public String upsertCompetitionSingleCompetitor(@PathVariable("competitionId") Optional<UUID> oCompetitionId,
+                                                    @PathVariable("personId") Optional<UUID> oPersonId,
                                                     @Valid Competitor competitor,
                                                     BindingResult result,
                                                     Model model) throws IllegalAccessException {
@@ -113,8 +114,8 @@ public class HtmlRegistrationController {
 
     @GetMapping(value = {"/{competitionId}/person/{personId}/beers/"})
     public String getBeersList(Model model,
-                               @PathVariable("competitionId") Optional<String> oCompetitionId,
-                               @PathVariable("personId") Optional<String> oPersonId) {
+                               @PathVariable("competitionId") Optional<UUID> oCompetitionId,
+                               @PathVariable("personId") Optional<UUID> oPersonId) {
 
         final Competition competition = oCompetitionId.map(id -> {
             return competitionRepository.findById(id)

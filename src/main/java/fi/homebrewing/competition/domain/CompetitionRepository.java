@@ -1,11 +1,12 @@
 package fi.homebrewing.competition.domain;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface CompetitionRepository extends JpaRepository<Competition, String> {
+public interface CompetitionRepository extends JpaRepository<Competition, UUID> {
     List<Competition> findAllByOrderByName();
 
     List<Competition> findAllByTypeOrderByName(Competition.Type type);

@@ -2,6 +2,7 @@ package fi.homebrewing.competition.domain;
 
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.UUID;
 
 import org.springframework.format.Formatter;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,8 @@ public class CompetitionCategoryHasBeerStyleFormatter implements Formatter<Compe
         if (pipeIndex == -1) return new CompetitionCategoryHasBeerStyle();
 
         final CompetitionCategoryHasBeerStyleKey competitionCategoryHasBeerStyleKey = new CompetitionCategoryHasBeerStyleKey();
-        competitionCategoryHasBeerStyleKey.setCompetitionCategoryId(text.substring(0, pipeIndex));
-        competitionCategoryHasBeerStyleKey.setBeerStyleId(text.substring(pipeIndex + 1));
+        competitionCategoryHasBeerStyleKey.setCompetitionCategoryId(UUID.fromString(text.substring(0, pipeIndex)));
+        competitionCategoryHasBeerStyleKey.setBeerStyleId(UUID.fromString(text.substring(pipeIndex + 1)));
 
         return competitionCategoryHasBeerStyleRepository.findById(competitionCategoryHasBeerStyleKey)
             .orElse(new CompetitionCategoryHasBeerStyle());

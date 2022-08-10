@@ -2,6 +2,7 @@ package fi.homebrewing.competition.htmlcontroller;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -56,12 +57,12 @@ public class HtmlAdminCompetitionController extends HtmlAdminController {
     }
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
-    public String getCompetitionForm(@PathVariable("id") Optional<String> oId, Model model) {
+    public String getCompetitionForm(@PathVariable("id") Optional<UUID> oId, Model model) {
         return getRowForm(oId, competitionRepository, model, getFormModelAttributes(), Competition::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
-    public String upsertCompetition(@PathVariable("id") Optional<String> oId, @Valid Competition competition, BindingResult result, Model model) {
+    public String upsertCompetition(@PathVariable("id") Optional<UUID> oId, @Valid Competition competition, BindingResult result, Model model) {
         oId.ifPresent(competition::setId);
         return upsertRow(competition, result, model, this::getFormModelAttributes, competitionRepository);
     }
@@ -72,7 +73,7 @@ public class HtmlAdminCompetitionController extends HtmlAdminController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteCompetition(@PathVariable("id") String id) {
+    public String deleteCompetition(@PathVariable("id") UUID id) {
         return deleteRow(id, competitionRepository);
     }
 

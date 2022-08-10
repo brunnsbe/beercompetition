@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -57,14 +58,14 @@ public class HtmlAdminBeerStyleController extends HtmlAdminController {
     }
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
-    public String getBeerStyleForm(@PathVariable("id") Optional<String> oId,
+    public String getBeerStyleForm(@PathVariable("id") Optional<UUID> oId,
                                    Model model) {
 
         return getRowForm(oId, beerStyleRepository, model, getFormModelAttributes(), BeerStyle::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
-    public String upsertBeerStyle(@PathVariable("id") Optional<String> oId,
+    public String upsertBeerStyle(@PathVariable("id") Optional<UUID> oId,
                                   @Valid BeerStyle beerStyle,
                                   BindingResult result,
                                   Model model) {
@@ -79,7 +80,7 @@ public class HtmlAdminBeerStyleController extends HtmlAdminController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteCompetition(@PathVariable("id") String id) {
+    public String deleteCompetition(@PathVariable("id") UUID id) {
         return deleteRow(id, beerStyleRepository);
     }
 

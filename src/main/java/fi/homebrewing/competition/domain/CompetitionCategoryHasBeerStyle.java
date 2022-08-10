@@ -10,8 +10,6 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.springframework.lang.Nullable;
-
 @Entity
 @Table(name = "competition_category_has_beer_style")
 public class CompetitionCategoryHasBeerStyle {

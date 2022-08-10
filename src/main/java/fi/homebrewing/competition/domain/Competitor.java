@@ -2,6 +2,7 @@ package fi.homebrewing.competition.domain;
 
 
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,8 +19,10 @@ import org.springframework.lang.Nullable;
 public class Competitor {
     @Id
     @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private String id;
+    @GenericGenerator(name = "system-uuid", strategy = "guid")
+    @org.hibernate.annotations.Type(type = "uuid-char")
+    @Column(columnDefinition = "uniqueidentifier")
+    private UUID id;
     @NotBlank(message = "{firstName.mandatory}")
     private String firstName;
     @NotBlank(message = "{lastName.mandatory}")
@@ -48,11 +51,11 @@ public class Competitor {
         this.emailAddress = emailAddress;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

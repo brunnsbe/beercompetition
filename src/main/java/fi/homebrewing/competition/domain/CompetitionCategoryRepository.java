@@ -1,12 +1,13 @@
 package fi.homebrewing.competition.domain;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CompetitionCategoryRepository extends JpaRepository<CompetitionCategory, String> {
+public interface CompetitionCategoryRepository extends JpaRepository<CompetitionCategory, UUID> {
     default List<CompetitionCategory> findAll(Competition competition) {
         final CompetitionCategory competitionCategory = new CompetitionCategory();
         competitionCategory.setCompetition(competition);

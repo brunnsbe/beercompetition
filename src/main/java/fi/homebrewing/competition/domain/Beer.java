@@ -1,21 +1,27 @@
 package fi.homebrewing.competition.domain;
 
+import java.util.UUID;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 @Entity
 public class Beer {
     @Id
     @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private String id;
+    @GenericGenerator(name = "system-uuid", strategy = "guid")
+    @Type(type = "uuid-char")
+    @Column(columnDefinition = "uniqueidentifier")
+    private UUID id;
     @ManyToOne(optional = false)
     private Competitor competitor;
     @org.hibernate.annotations.ForeignKey(name = "none")
@@ -44,11 +50,11 @@ public class Beer {
         this.alcoholPercentage = alcoholPercentage;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

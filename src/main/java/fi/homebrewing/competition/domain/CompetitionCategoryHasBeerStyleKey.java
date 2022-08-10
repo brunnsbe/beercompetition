@@ -2,17 +2,24 @@ package fi.homebrewing.competition.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 @Embeddable
 public class CompetitionCategoryHasBeerStyleKey implements Serializable {
-    @Column(name = "competition_category_id")
-    private String competitionCategoryId;
+    @Column(name = "competition_category_id", columnDefinition = "uniqueidentifier")
+    @Type(type = "uuid-char")
+    private UUID competitionCategoryId;
 
-    @Column(name = "beer_style_id")
-    private String beerStyleId;
+    @Column(name = "beer_style_id", columnDefinition = "uniqueidentifier")
+    @Type(type = "uuid-char")
+    private UUID beerStyleId;
 
     @Override
     public int hashCode() {
@@ -33,19 +40,19 @@ public class CompetitionCategoryHasBeerStyleKey implements Serializable {
         return competitionCategoryId + "|" + beerStyleId;
     }
 
-    public String getCompetitionCategoryId() {
+    public UUID getCompetitionCategoryId() {
         return competitionCategoryId;
     }
 
-    public void setCompetitionCategoryId(String competitionCategoryId) {
+    public void setCompetitionCategoryId(UUID competitionCategoryId) {
         this.competitionCategoryId = competitionCategoryId;
     }
 
-    public String getBeerStyleId() {
+    public UUID getBeerStyleId() {
         return beerStyleId;
     }
 
-    public void setBeerStyleId(String beerStyleId) {
+    public void setBeerStyleId(UUID beerStyleId) {
         this.beerStyleId = beerStyleId;
     }
 

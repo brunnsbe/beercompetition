@@ -1,6 +1,7 @@
 package fi.homebrewing.competition.restcontroller;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import fi.homebrewing.competition.domain.Beer;
 import fi.homebrewing.competition.domain.BeerRepository;
@@ -30,7 +31,7 @@ public class BeerController {
     }
 
     @GetMapping("/{id}")
-    Optional<Beer> getBeerById(@PathVariable String id) {
+    Optional<Beer> getBeerById(@PathVariable UUID id) {
         return beerRepository.findById(id);
     }
 
@@ -40,14 +41,14 @@ public class BeerController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Beer> putBeer(@PathVariable String id, @RequestBody Beer beer) {
+    ResponseEntity<Beer> putBeer(@PathVariable UUID id, @RequestBody Beer beer) {
         return beerRepository.existsById(id)
             ? new ResponseEntity<>(beerRepository.save(beer), HttpStatus.OK)
             : new ResponseEntity<>(beerRepository.save(beer), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    void deleteBeer(@PathVariable String id) {
+    void deleteBeer(@PathVariable UUID id) {
         beerRepository.deleteById(id);
     }
 }

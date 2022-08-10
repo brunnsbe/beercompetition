@@ -3,6 +3,7 @@ package fi.homebrewing.competition.htmlcontroller;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -75,12 +76,12 @@ public class HtmlAdminBeerController extends HtmlAdminController {
     }
 
     @GetMapping(value = {"/edit", "/edit/{id}"})
-    public String getRowForm(@PathVariable("id") Optional<String> oId, Model model) {
+    public String getRowForm(@PathVariable("id") Optional<UUID> oId, Model model) {
         return getRowForm(oId, beerRepository, model, getFormModelAttributes(), Beer::new);
     }
 
     @PostMapping(value = {"/upsert", "/upsert/{id}"})
-    public String upsertBeer(@PathVariable("id") Optional<String> oId, @Valid Beer beer, BindingResult result, Model model) {
+    public String upsertBeer(@PathVariable("id") Optional<UUID> oId, @Valid Beer beer, BindingResult result, Model model) {
         oId.ifPresent(beer::setId);
         return upsertRow(beer, result, model, this::getFormModelAttributes, beerRepository);
     }
@@ -96,7 +97,7 @@ public class HtmlAdminBeerController extends HtmlAdminController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteBeer(@PathVariable("id") String id) {
+    public String deleteBeer(@PathVariable("id") UUID id) {
         return deleteRow(id, beerRepository);
     }
 
