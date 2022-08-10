@@ -19,7 +19,7 @@ import org.springframework.lang.Nullable;
 public class Competitor {
     @Id
     @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "guid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     @org.hibernate.annotations.Type(type = "uuid-char")
     @Column(columnDefinition = "uniqueidentifier")
     private UUID id;

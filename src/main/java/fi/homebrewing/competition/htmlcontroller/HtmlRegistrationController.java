@@ -138,7 +138,7 @@ public class HtmlRegistrationController {
                 // Table
                 HtmlAdminBeerController.MODEL_ATTRIBUTE_MULTIPLE,
                 allBeers.stream() // We cannot filter via competition due to no direct link between beer and competition
-                    .filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategoryHasBeerStyle().getCompetitionCategory().getCompetition()))
+                    .filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategoryBeerStyle().getCompetitionCategory().getCompetition()))
                     .toList()
             )
         );

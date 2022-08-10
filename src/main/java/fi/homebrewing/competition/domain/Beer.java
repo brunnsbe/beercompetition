@@ -6,8 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
@@ -18,16 +18,15 @@ import org.hibernate.annotations.Type;
 public class Beer {
     @Id
     @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "guid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     @Type(type = "uuid-char")
     @Column(columnDefinition = "uniqueidentifier")
     private UUID id;
     @ManyToOne(optional = false)
     private Competitor competitor;
-    @org.hibernate.annotations.ForeignKey(name = "none")
-    // IS THIS OKAY AS WE GET THE FOREIGN KEY CHECK IN WRONG ORDER !?
     @ManyToOne(optional = false)
-    private CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle;
+    @JoinColumn(name = "competition_category_has_beer_style_id",referencedColumnName = "id")
+    private CompetitionCategoryBeerStyle competitionCategoryBeerStyle;
     @NotBlank(message = "{name.mandatory}")
     private String name;
     private String comment;
@@ -42,10 +41,10 @@ public class Beer {
     public Beer() {
     }
 
-    public Beer(String name, String comment, CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle, Competitor competitor, Double alcoholPercentage) {
+    public Beer(String name, String comment, CompetitionCategoryBeerStyle competitionCategoryBeerStyle, Competitor competitor, Double alcoholPercentage) {
         this.name = name;
         this.comment = comment;
-        this.competitionCategoryHasBeerStyle = competitionCategoryHasBeerStyle;
+        this.competitionCategoryBeerStyle = competitionCategoryBeerStyle;
         this.competitor = competitor;
         this.alcoholPercentage = alcoholPercentage;
     }
@@ -90,12 +89,12 @@ public class Beer {
         this.competitor = competitor;
     }
 
-    public CompetitionCategoryHasBeerStyle getCompetitionCategoryHasBeerStyle() {
-        return competitionCategoryHasBeerStyle;
+    public CompetitionCategoryBeerStyle getCompetitionCategoryBeerStyle() {
+        return competitionCategoryBeerStyle;
     }
 
-    public void setCompetitionCategoryHasBeerStyle(CompetitionCategoryHasBeerStyle competitionCategoryHasBeerStyle) {
-        this.competitionCategoryHasBeerStyle = competitionCategoryHasBeerStyle;
+    public void setCompetitionCategoryBeerStyle(CompetitionCategoryBeerStyle competitionCategoryBeerStyle) {
+        this.competitionCategoryBeerStyle = competitionCategoryBeerStyle;
     }
 
     public Double getIbu() {

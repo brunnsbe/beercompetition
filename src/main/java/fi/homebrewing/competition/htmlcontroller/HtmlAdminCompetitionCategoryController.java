@@ -2,13 +2,17 @@ package fi.homebrewing.competition.htmlcontroller;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import fi.homebrewing.competition.domain.BeerStyle;
 import fi.homebrewing.competition.domain.BeerStyleRepository;
 import fi.homebrewing.competition.domain.Competition;
 import fi.homebrewing.competition.domain.CompetitionCategory;
+import fi.homebrewing.competition.domain.CompetitionCategoryBeerStyle;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
 import org.springframework.data.repository.query.Param;
@@ -50,7 +54,9 @@ public class HtmlAdminCompetitionCategoryController extends HtmlAdminController 
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE,
             competition,
             MODEL_ATTRIBUTE_MULTIPLE,
-            competitionCategoryRepository.findAll(competition)
+            competitionCategoryRepository.findAll(competition),
+            HtmlAdminBeerStyleController.MODEL_ATTRIBUTE_MULTIPLE,
+            beerStyleRepository.findAllByOrderByName()
         );
 
         return getRowsList(model, modelAttributes);
@@ -65,6 +71,11 @@ public class HtmlAdminCompetitionCategoryController extends HtmlAdminController 
     public String upsert(@PathVariable("id") Optional<UUID> oId, @Valid CompetitionCategory competitionCategory, BindingResult result, Model model) {
         oId.ifPresent(competitionCategory::setId);
 
+/*
+        competitionCategory.setCompetitionCategoryBeerStyles(
+            competitionCategory.getBeerStylesInModel().stream().map(v -> new CompetitionCategoryBeerStyle(competitionCategory, v)).collect(Collectors.toSet())
+        );
+*/
         return upsertRow(competitionCategory, result, model, this::getFormModelAttributes, competitionCategoryRepository);
     }
 

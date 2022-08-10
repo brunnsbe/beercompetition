@@ -14,12 +14,12 @@
           method="post">
 
         <div class="mb-3">
-            <label for="competitionCategoryHasBeerStyle" class="form-label">Competiton, category and style</label>
-            <select th:field="*{competitionCategoryHasBeerStyle}" class="form-select">
-                <option th:each="c : ${competitionCategoryHasBeerStyles}" th:value="${c.id}" th:text="${c.competitionCategory.competition.name} + ' \ ' + ${c.competitionCategory.name} + ' \ '  + ${c.beerStyle.name}">
+            <label for="competitionCategoryBeerStyle" class="form-label">Competiton, category and style</label>
+            <select th:field="*{competitionCategoryBeerStyle}" class="form-select">
+                <option th:each="c : ${competitionCategoryBeerStyles}" th:value="${c.id}" th:text="${c.competitionCategory.competition.name} + ' \ ' + ${c.competitionCategory.name} + ' \ '  + ${c.beerStyle.name}">
                 </option>
             </select>
-            <span th:if="${#fields.hasErrors('competitionCategoryHasBeerStyle')}" th:errors="*{competitionCategoryHasBeerStyle}"></span>
+            <span th:if="${#fields.hasErrors('competitionCategoryBeerStyle')}" th:errors="*{competitionCategoryBeerStyle}"></span>
         </div>
 
         <div class="mb-3">

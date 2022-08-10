@@ -3,12 +3,11 @@ package fi.homebrewing.competition.domain;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -18,7 +17,7 @@ import org.hibernate.annotations.Type;
 public class BeerStyle {
     @Id
     @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "guid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     @Type(type = "uuid-char")
     @Column(columnDefinition = "uniqueidentifier")
     private UUID id;
@@ -26,8 +25,8 @@ public class BeerStyle {
     private String name;
     private String description;
 
-    @ManyToMany(mappedBy = "beerStyles", cascade = CascadeType.MERGE)
-    private Set<CompetitionCategory> competitionCategories;
+    @OneToMany(mappedBy = "beerStyle")
+    private Set<CompetitionCategoryBeerStyle> competitionCategoryBeerStyles;
 
     public BeerStyle() {
     }
@@ -61,11 +60,11 @@ public class BeerStyle {
         this.description = description;
     }
 
-    public Set<CompetitionCategory> getCompetitionCategories() {
-        return competitionCategories;
+    public Set<CompetitionCategoryBeerStyle> getCompetitionCategoryBeerStyles() {
+        return competitionCategoryBeerStyles;
     }
 
-    public void setCompetitionCategories(Set<CompetitionCategory> competitionCategories) {
-        this.competitionCategories = competitionCategories;
+    public void setCompetitionCategoryBeerStyles(Set<CompetitionCategoryBeerStyle> competitionCategoryBeerStyles) {
+        this.competitionCategoryBeerStyles = competitionCategoryBeerStyles;
     }
 }

@@ -22,7 +22,7 @@ import org.springframework.lang.Nullable;
 public class Competition {
     @Id
     @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "guid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     @org.hibernate.annotations.Type(type = "uuid-char")
     @Column(columnDefinition = "uniqueidentifier")
     private UUID id;
@@ -107,7 +107,7 @@ public class Competition {
 
     @Transient
     public Set<Beer> getBeers() {
-        return competitionCategories.stream().flatMap(v -> v.getCompetitionCategoryHasBeerStyles().stream())
+        return competitionCategories.stream().flatMap(v -> v.getCompetitionCategoryBeerStyles().stream())
             .flatMap(v -> v.getBeers().stream())
             .collect(Collectors.toSet());
     }

@@ -11,7 +11,7 @@ public interface CompetitionRepository extends JpaRepository<Competition, UUID> 
 
     List<Competition> findAllByTypeOrderByName(Competition.Type type);
 
-    @Query("SELECT c FROM Competition c WHERE EXISTS (SELECT 1 FROM CompetitionCategoryHasBeerStyle cchbs " +
+    @Query("SELECT c FROM Competition c WHERE EXISTS (SELECT 1 FROM CompetitionCategoryBeerStyle cchbs " +
         "INNER JOIN CompetitionCategory cc ON cchbs.competitionCategory = cc AND cc.competition = c) ORDER BY c.name")
     List<Competition> findAllByCompetitionCategoryIsNotNullOrderByName();
 }

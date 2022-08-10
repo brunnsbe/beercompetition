@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import fi.homebrewing.competition.domain.Beer;
 import fi.homebrewing.competition.domain.BeerRepository;
 import fi.homebrewing.competition.domain.Competition;
-import fi.homebrewing.competition.domain.CompetitionCategoryHasBeerStyleRepository;
+import fi.homebrewing.competition.domain.CompetitionCategoryBeerStyleRepository;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
 import fi.homebrewing.competition.domain.CompetitorRepository;
@@ -36,19 +36,19 @@ public class HtmlAdminBeerController extends HtmlAdminController {
     protected static final String MODEL_ATTRIBUTE_MULTIPLE = "beers";
 
     private final BeerRepository beerRepository;
-    private final CompetitionCategoryHasBeerStyleRepository competitionCategoryHasBeerStyleRepository;
+    private final CompetitionCategoryBeerStyleRepository competitionCategoryBeerStyleRepository;
     private final CompetitorRepository competitorRepository;
     private final CompetitionCategoryRepository competitionCategoryRepository;
     private final CompetitionRepository competitionRepository;
 
     public HtmlAdminBeerController(BeerRepository beerRepository,
-                                   CompetitionCategoryHasBeerStyleRepository competitionCategoryHasBeerStyleRepository,
+                                   CompetitionCategoryBeerStyleRepository competitionCategoryBeerStyleRepository,
                                    CompetitorRepository competitorRepository,
                                    CompetitionCategoryRepository competitionCategoryRepository,
                                    CompetitionRepository competitionRepository) {
 
         this.beerRepository = beerRepository;
-        this.competitionCategoryHasBeerStyleRepository = competitionCategoryHasBeerStyleRepository;
+        this.competitionCategoryBeerStyleRepository = competitionCategoryBeerStyleRepository;
         this.competitorRepository = competitorRepository;
         this.competitionCategoryRepository = competitionCategoryRepository;
         this.competitionRepository = competitionRepository;
@@ -68,7 +68,7 @@ public class HtmlAdminBeerController extends HtmlAdminController {
             // Table
             MODEL_ATTRIBUTE_MULTIPLE,
             allBeers.stream()
-                .filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategoryHasBeerStyle().getCompetitionCategory().getCompetition()))
+                .filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategoryBeerStyle().getCompetitionCategory().getCompetition()))
                 .toList()
         );
 
@@ -89,8 +89,8 @@ public class HtmlAdminBeerController extends HtmlAdminController {
     @Override
     protected Map<String, ?> getFormModelAttributes() {
      return Map.of(
-         "competitionCategoryHasBeerStyles",
-         competitionCategoryHasBeerStyleRepository.findAll(),
+         "competitionCategoryBeerStyles",
+         competitionCategoryBeerStyleRepository.findAll(),
          HtmlAdminCompetitorController.MODEL_ATTRIBUTE_MULTIPLE,
          competitorRepository.findAllByOrderByLastNameAscFirstNameAsc()
      );

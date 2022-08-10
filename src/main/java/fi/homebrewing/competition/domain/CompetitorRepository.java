@@ -10,5 +10,5 @@ import org.springframework.lang.Nullable;
 public interface CompetitorRepository extends JpaRepository<Competitor, UUID> {
     Optional<Competitor> findByEmailAddress(String emailAddress);
 
-    List<Competition> findAllByOrderByLastNameAscFirstNameAsc();
+    List<Competitor> findAllByOrderByLastNameAscFirstNameAsc();
 }

@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface CompetitionCategoryRepository extends JpaRepository<CompetitionCategory, UUID> {
     default List<CompetitionCategory> findAll(Competition competition) {
@@ -15,6 +16,7 @@ public interface CompetitionCategoryRepository extends JpaRepository<Competition
         return findAll(example, Sort.by(Sort.Direction.ASC, "name"));
     }
 
+    @Query("SELECT cc FROM CompetitionCategory cc WHERE EXISTS (SELECT 1 FROM CompetitionCategoryBeerStyle cchbs WHERE cchbs.competitionCategory = cc) ORDER BY cc.name")
     List<CompetitionCategory> findDistinctByBeerStylesIsNotNullOrderByName();
 }
 

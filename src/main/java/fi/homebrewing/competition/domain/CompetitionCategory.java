@@ -2,15 +2,13 @@ package fi.homebrewing.competition.domain;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -23,7 +21,7 @@ import org.hibernate.annotations.Type;
 public class CompetitionCategory {
     @Id
     @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "guid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     @Type(type = "uuid-char")
     @Column(columnDefinition = "uniqueidentifier")
     private UUID id;
@@ -33,23 +31,19 @@ public class CompetitionCategory {
     @ManyToOne(optional = false)
     private Competition competition;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "competition_category_has_beer_style",
-        joinColumns = @JoinColumn(name = "competition_category_id"),
-        inverseJoinColumns = @JoinColumn(name = "beer_style_id"))
-    private Set<BeerStyle> beerStyles;
-
     @OneToMany(mappedBy = "competitionCategory")
-    private Set<CompetitionCategoryHasBeerStyle> competitionCategoryHasBeerStyles;
+    private Set<CompetitionCategoryBeerStyle> competitionCategoryBeerStyles;
+
+    @Transient
+    private Set<BeerStyle> beerStyles;
 
     public CompetitionCategory() {
     }
 
-    public CompetitionCategory(String name, String description, Competition competition, Set<BeerStyle> beerStyles) {
+    public CompetitionCategory(String name, String description, Competition competition) {
         this.name = name;
         this.description = description;
         this.competition = competition;
-        this.beerStyles = beerStyles;
     }
 
     public UUID getId() {
@@ -89,7 +83,15 @@ public class CompetitionCategory {
         return competition.getName() + " \\ " + name;
     }
 
+    public Set<CompetitionCategoryBeerStyle> getCompetitionCategoryBeerStyles() {
+        return competitionCategoryBeerStyles;
+    }
+
     public Set<BeerStyle> getBeerStyles() {
+        return competitionCategoryBeerStyles.stream().map(CompetitionCategoryBeerStyle::getBeerStyle).collect(Collectors.toSet());
+    }
+
+    public Set<BeerStyle> getBeerStylesInModel() {
         return beerStyles;
     }
 
@@ -97,7 +99,7 @@ public class CompetitionCategory {
         this.beerStyles = beerStyles;
     }
 
-    public Set<CompetitionCategoryHasBeerStyle> getCompetitionCategoryHasBeerStyles() {
-        return competitionCategoryHasBeerStyles;
+    public void setCompetitionCategoryBeerStyles(Set<CompetitionCategoryBeerStyle> competitionCategoryBeerStyles) {
+        this.competitionCategoryBeerStyles = competitionCategoryBeerStyles;
     }
 }

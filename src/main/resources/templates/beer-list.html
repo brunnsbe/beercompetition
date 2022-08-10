@@ -51,9 +51,9 @@
                 <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
                 <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${b.id})}">Edit</a>
             </td>
-            <td th:text="${b.competitionCategoryHasBeerStyle.competitionCategory.competition.name}"></td>
-            <td th:text="${b.competitionCategoryHasBeerStyle.competitionCategory.name}"></td>
-            <td th:text="${b.competitionCategoryHasBeerStyle.beerStyle.name}"></td>
+            <td th:text="${b.competitionCategoryBeerStyle.competitionCategory.competition.name}"></td>
+            <td th:text="${b.competitionCategoryBeerStyle.competitionCategory.name}"></td>
+            <td th:text="${b.competitionCategoryBeerStyle.beerStyle.name}"></td>
             <td th:text="${b.competitor.fullName}"></td>
             <td th:text="${b.name}"></td>
             <td th:text="${#numbers.formatDecimal(b.alcoholPercentage, 1, 'DEFAULT', 1, 'COMMA')} + ' %'"></td>
