@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -88,11 +87,11 @@ public class CompetitionCategory {
     }
 
     public Set<BeerStyle> getBeerStyles() {
-        return competitionCategoryBeerStyles.stream().map(CompetitionCategoryBeerStyle::getBeerStyle).collect(Collectors.toSet());
-    }
-
-    public Set<BeerStyle> getBeerStylesInModel() {
-        return beerStyles;
+        if (competitionCategoryBeerStyles == null) {
+            return beerStyles;
+        } else {
+            return competitionCategoryBeerStyles.stream().map(CompetitionCategoryBeerStyle::getBeerStyle).collect(Collectors.toSet());
+        }
     }
 
     public void setBeerStyles(Set<BeerStyle> beerStyles) {

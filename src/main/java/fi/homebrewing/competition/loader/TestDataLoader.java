@@ -1,7 +1,6 @@
 package fi.homebrewing.competition.loader;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
