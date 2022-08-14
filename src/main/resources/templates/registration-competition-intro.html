@@ -3,11 +3,11 @@
 <head th:replace="fragments/head"></head>
 <body>
 
-<div class="container-fluid">
+<div class="container">
     <div class="mb-3">
         <h1 th:text="${competition.getName()}"></h1>
     </div>
-    <div class="mb-3" th:text="${competition.getIntroductionText()}">
+    <div class="mb-3" th:utext="${#strings.replace( #strings.escapeXml(competition.getIntroductionText()),'&#10;','&lt;br /&gt;')}">
     </div>
     <div class="row">
         <div class="col">

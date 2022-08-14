@@ -48,8 +48,9 @@
         <tbody>
         <tr th:each="b : ${beers}">
             <td>
-                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
-                <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${b.id})}">Edit</a>
+
+                <a class="btn btn-secondary" role="button" th:data-href="${competition != null && competitor != null} ? @{/registration/competition/{competitionId}/person/{competitorId}/beers/delete/{beerId}(competitionId=${competition.id},competitorId=${competitor.id},beerId=${b.id})} : @{delete/{id}/(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
+                <a class="btn btn-primary" role="button" th:href="${competition != null && competitor != null} ? @{/registration/competition/{competitionId}/person/{competitorId}/beers/edit/{beerId}(competitionId=${competition.id},competitorId=${competitor.id},beerId=${b.id})} : @{edit/{id}/(id=${b.id})}">Edit</a>
             </td>
             <td th:text="${b.competitionCategoryBeerStyle.competitionCategory.competition.name}"></td>
             <td th:text="${b.competitionCategoryBeerStyle.competitionCategory.name}"></td>

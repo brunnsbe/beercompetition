@@ -38,6 +38,8 @@ public class Beer {
 
     private Double ebc;
 
+    private Double score;
+
     public Beer() {
     }
 
@@ -111,5 +113,13 @@ public class Beer {
 
     public void setEbc(Double ebc) {
         this.ebc = ebc;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
     }
 }
