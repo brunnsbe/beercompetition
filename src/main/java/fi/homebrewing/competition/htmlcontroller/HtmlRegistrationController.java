@@ -43,13 +43,11 @@ public class HtmlRegistrationController {
     }
 
     @GetMapping(value = {"/{competitionId}"})
-    public String getCompetitionRegistrationIntroduction(@PathVariable("competitionId") Optional<UUID> oCompetitionId,
+    public String getCompetitionRegistrationIntroduction(@PathVariable("competitionId") UUID competitionId,
                                                          Model model) {
 
-        final Competition competition = oCompetitionId.map(id -> {
-            return competitionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
-        }).orElseThrow(() -> new IllegalArgumentException("No id given"));
+        final Competition competition = competitionRepository.findById(competitionId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
 
         model.addAttribute(HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE, competition);
 
@@ -57,15 +55,12 @@ public class HtmlRegistrationController {
     }
 
     @GetMapping(value = {"/{competitionId}/person/edit/", "/{competitionId}/person/{personId}/edit/"})
-    public String getCompetitionSingleCompetitorForm(@PathVariable("competitionId") Optional<UUID> oCompetitionId,
+    public String getCompetitionSingleCompetitorForm(@PathVariable("competitionId") UUID competitionId,
                                                      @PathVariable("personId") Optional<UUID> oPersonId,
                                                      Model model) {
 
-        final Competition competition = oCompetitionId.map(id -> {
-            return competitionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + id));
-        }).orElseThrow(() -> new IllegalArgumentException("No id given"));
-
+        final Competition competition = competitionRepository.findById(competitionId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
         model.addAttribute(HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE, competition);
 
         final Competitor competitor = oPersonId.map(id -> {
@@ -75,33 +70,29 @@ public class HtmlRegistrationController {
 
         model.addAttribute(HtmlAdminCompetitorController.MODEL_ATTRIBUTE_SINGLE, competitor);
         if (oPersonId.isPresent()) {
-            model.addAttribute("activePage", "/registration/competition/" + oCompetitionId.get() + "/person/" + competitor.getId() + "/beers/");
+            model.addAttribute("activePage", "/registration/competition/" + competitionId + "/person/" + competitor.getId() + "/beers/");
         }
 
         return "competitor-form";
     }
 
     @PostMapping(value = {"/{competitionId}/person/upsert", "/{competitionId}/person/upsert/{personId}"})
-    public String upsertCompetitionSingleCompetitor(@PathVariable("competitionId") Optional<UUID> oCompetitionId,
+    public String upsertCompetitionSingleCompetitor(@PathVariable("competitionId") UUID competitionId,
                                                     @PathVariable("personId") Optional<UUID> oPersonId,
                                                     @Valid Competitor competitor,
                                                     BindingResult result,
                                                     Model model) throws IllegalAccessException {
 
-        // Check that the given competition in the URL really exists
-        final Competition competition = oCompetitionId.map(id -> {
-            return competitionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid competition id:" + id));
-        }).orElseThrow(() -> new IllegalArgumentException("No competition id given"));
+        final Competition competition = competitionRepository.findById(competitionId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
+        model.addAttribute(HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE, competition);
 
         oPersonId.ifPresent(competitor::setId);
 
         if (result.hasErrors()) {
             model.addAttribute(HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE, competition);
             model.addAttribute(HtmlAdminCompetitorController.MODEL_ATTRIBUTE_SINGLE, competitor); // ??
-            if (oPersonId.isPresent()) {
-                model.addAttribute("activePage", "/registration/competition/" + oCompetitionId.get() + "/person/" + competitor.getId() + "/beers/");
-            }
+            oPersonId.ifPresent(uuid -> model.addAttribute("activePage", "/registration/competition/" + competitionId + "/person/" + uuid + "/beers/"));
 
             return "competitor-form";
         }
@@ -121,23 +112,18 @@ public class HtmlRegistrationController {
 
         // TODO: Add email sending when saved if new registration
 
-        return "redirect:/registration/competition/" + oCompetitionId.get() + "/person/" + competitor.getId() + "/beers/";
+        return "redirect:/registration/competition/" + competitionId + "/person/" + competitor.getId() + "/beers/";
     }
 
     @GetMapping(value = {"/{competitionId}/person/{personId}/beers/"})
     public String getBeersList(Model model,
-                               @PathVariable("competitionId") Optional<UUID> oCompetitionId,
-                               @PathVariable("personId") Optional<UUID> oPersonId) {
+                               @PathVariable("competitionId") UUID competitionId,
+                               @PathVariable("personId") UUID personId) {
 
-        final Competition competition = oCompetitionId.map(id -> {
-            return competitionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid competition id:" + id));
-        }).orElseThrow(() -> new IllegalArgumentException("No competition id given"));
-
-        final Competitor competitor = oPersonId.map(id -> {
-            return competitorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid competitor id:" + id));
-        }).orElseThrow(() -> new IllegalArgumentException("No competitor id given"));
+        final Competition competition = competitionRepository.findById(competitionId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
+        final Competitor competitor = competitorRepository.findById(personId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + personId));
 
         final List<Beer> allBeers = beerRepository.findAllByCompetitorOrderByNameAsc(competitor);
 
@@ -159,20 +145,15 @@ public class HtmlRegistrationController {
     }
 
     @GetMapping(value = {"/{competitionId}/person/{personId}/beers/edit/", "/{competitionId}/person/{personId}/beers/edit/{beerId}"})
-    public String getBeerForm(@PathVariable("competitionId") Optional<UUID> oCompetitionId,
-                              @PathVariable("personId") Optional<UUID> oPersonId,
+    public String getBeerForm(@PathVariable("competitionId") UUID competitionId,
+                              @PathVariable("personId") UUID competitorId,
                               @PathVariable("beerId") Optional<UUID> oBeerId,
                               Model model) {
 
-        final Competition competition = oCompetitionId.map(id -> {
-            return competitionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid competition id:" + id));
-        }).orElseThrow(() -> new IllegalArgumentException("No competition id given"));
-
-        final Competitor competitor = oPersonId.map(id -> {
-            return competitorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid competitor id:" + id));
-        }).orElseThrow(() -> new IllegalArgumentException("No competitor id given"));
+        final Competition competition = competitionRepository.findById(competitionId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
+        final Competitor competitor = competitorRepository.findById(competitorId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitorId));
 
         final Beer beer = oBeerId.map(id -> {
             final Beer v = beerRepository.findById(id)
@@ -180,10 +161,10 @@ public class HtmlRegistrationController {
 
             // Validation of UUIDs in URL
             if (!v.getCompetitionCategoryBeerStyle().getCompetitionCategory().getCompetition().equals(competition)) {
-                throw new IllegalArgumentException("Illegal competition id: " + competition.getId());
+                throw new IllegalArgumentException("Illegal competition id: " + competitionId);
             }
             if (!v.getCompetitor().equals(competitor)) {
-                throw new IllegalArgumentException("Illegal competitor id: " + competitor.getId());
+                throw new IllegalArgumentException("Illegal competitor id: " + competitorId);
             }
 
             return v;
@@ -200,7 +181,7 @@ public class HtmlRegistrationController {
                 HtmlAdminCompetitorController.MODEL_ATTRIBUTE_MULTIPLE,
                 List.of(competitor),
                 "activePage",
-                "/registration/competition/" + oCompetitionId.get() + "/person/" + competitor.getId() + "/beers/"
+                "/registration/competition/" + competitionId + "/person/" + competitorId + "/beers/"
             )
         );
 
@@ -208,22 +189,17 @@ public class HtmlRegistrationController {
     }
 
     @PostMapping(value = {"/{competitionId}/person/{personId}/beers/upsert/", "/{competitionId}/person/{personId}/beers/upsert/{beerId}"})
-    public String upsertBeer(@PathVariable("competitionId") Optional<UUID> oCompetitionId,
-                             @PathVariable("personId") Optional<UUID> oPersonId,
+    public String upsertBeer(@PathVariable("competitionId") UUID competitionId,
+                             @PathVariable("personId") UUID competitorId,
                              @PathVariable("beerId") Optional<UUID> oBeerId,
                              @Valid Beer beer, BindingResult result, Model model) {
 
         oBeerId.ifPresent(beer::setId);
-        // Check that the given competition in the URL really exists
-        final Competition competition = oCompetitionId.map(id -> {
-            return competitionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid competition id:" + id));
-        }).orElseThrow(() -> new IllegalArgumentException("No competition id given"));
 
-        final Competitor competitor = oPersonId.map(id -> {
-            return competitorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid competitor id:" + id));
-        }).orElseThrow(() -> new IllegalArgumentException("No competitor id given"));
+        final Competition competition = competitionRepository.findById(competitionId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
+        final Competitor competitor = competitorRepository.findById(competitorId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitorId));
 
         if (result.hasErrors()) {
             model.addAllAttributes(
@@ -235,7 +211,7 @@ public class HtmlRegistrationController {
                     "competitionCategoryBeerStyles",
                     competitionCategoryBeerStyleRepository.findAllByCompetitionOrderByCategoryNameAscBeerStyleAsc(competition),
                     "activePage",
-                    "/registration/competition/" + oCompetitionId.get() + "/person/" + competitor.getId() + "/beers/"
+                    "/registration/competition/" + competitionId + "/person/" + competitorId + "/beers/"
                 )
             );
 
@@ -244,24 +220,18 @@ public class HtmlRegistrationController {
 
         beerRepository.save(beer);
 
-        return "redirect:/registration/competition/" + oCompetitionId.get() + "/person/" + competitor.getId() + "/beers/";
+        return "redirect:/registration/competition/" + competitionId + "/person/" + competitorId + "/beers/";
     }
 
     @GetMapping(value = {"/{competitionId}/person/{personId}/beers/delete/{beerId}"})
-    public String deleteBeer(@PathVariable("competitionId") Optional<UUID> oCompetitionId,
-                             @PathVariable("personId") Optional<UUID> oPersonId,
+    public String deleteBeer(@PathVariable("competitionId") UUID competitionId,
+                             @PathVariable("personId") UUID competitorId,
                              @PathVariable("beerId") Optional<UUID> oBeerId) {
 
-        // Check that the given competition in the URL really exists
-        final Competition competition = oCompetitionId.map(id -> {
-            return competitionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid competition id:" + id));
-        }).orElseThrow(() -> new IllegalArgumentException("No competition id given"));
-
-        final Competitor competitor = oPersonId.map(id -> {
-            return competitorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid competitor id:" + id));
-        }).orElseThrow(() -> new IllegalArgumentException("No competitor id given"));
+        final Competition competition = competitionRepository.findById(competitionId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
+        final Competitor competitor = competitorRepository.findById(competitorId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitorId));
 
         final Beer beer = oBeerId.map(id -> {
             return beerRepository.findById(id)
@@ -277,6 +247,6 @@ public class HtmlRegistrationController {
         }
 
         beerRepository.delete(beer);
-        return "redirect:/registration/competition/" + oCompetitionId.get() + "/person/" + competitor.getId() + "/beers/";
+        return "redirect:/registration/competition/" + competitionId + "/person/" + competitorId + "/beers/";
     }
 }

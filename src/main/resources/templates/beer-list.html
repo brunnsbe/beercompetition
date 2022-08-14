@@ -38,6 +38,7 @@
             <th scope="col">Category</th>
             <th scope="col">Style</th>
             <th scope="col">Competitor</th>
+            <th scope="col">Number</th>
             <th scope="col">Name</th>
             <th scope="col">Alc.</th>
             <th scope="col">IBU</th>
@@ -56,6 +57,7 @@
             <td th:text="${b.competitionCategoryBeerStyle.competitionCategory.name}"></td>
             <td th:text="${b.competitionCategoryBeerStyle.beerStyle.name}"></td>
             <td th:text="${b.competitor.fullName}"></td>
+            <td th:text="${b.beerNumber}"></td>
             <td th:text="${b.name}"></td>
             <td th:text="${#numbers.formatDecimal(b.alcoholPercentage, 1, 'DEFAULT', 1, 'COMMA')} + ' %'"></td>
             <td th:text="${#numbers.formatDecimal(b.ibu, 1, 'DEFAULT', 1, 'COMMA')}"></td>

@@ -1,6 +1,8 @@
 package fi.homebrewing.competition.domain;
 
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -39,6 +43,11 @@ public class Beer {
     private Double ebc;
 
     private Double score;
+
+    // Notice, that we here use SQL Server column definition for the sequence
+    @Generated(GenerationTime.INSERT)
+    @Column(columnDefinition = "int identity(1,1)", updatable = false)
+    private long sequenceNumber;
 
     public Beer() {
     }
@@ -121,5 +130,22 @@ public class Beer {
 
     public void setScore(Double score) {
         this.score = score;
+    }
+
+    public String getBeerNumber() {
+        Pattern numberPattern = Pattern.compile("\\d+");
+
+        final String beerStyle = getCompetitionCategoryBeerStyle().getBeerStyle().getName();
+        final String competitionCategory = getCompetitionCategoryBeerStyle().getCompetitionCategory().getName();
+        try {
+            final Matcher matcher = numberPattern.matcher(competitionCategory);
+            if (matcher.find()) {
+                final long competitionCategoryAsLong = Long.parseLong(matcher.group(0));
+                return beerStyle.substring(0, beerStyle.indexOf(' ')) + "-" + ((1000 * competitionCategoryAsLong) + sequenceNumber);
+            }
+        } catch (NumberFormatException e) {
+            // Just skip
+        }
+        return beerStyle.substring(0, beerStyle.indexOf(' ')) + "-" + sequenceNumber;
     }
 }
