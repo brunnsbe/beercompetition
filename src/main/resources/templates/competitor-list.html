@@ -10,15 +10,15 @@
     <div class="row">
         <div class="col">
             <br/>
-            <a class="btn btn-primary" role="button" th:href="@{edit/}">Create new</a>
+            <a class="btn btn-primary" role="button" th:href="@{edit/}" th:text="#{button.create_new}"></a>
         </div>
     </div>
 
     <form class="row gy-2 gx-3 align-items-center" id="filterForm" th:action="@{''}" th:if="${showFilters == true}">
         <div class="col-auto">
-            <label for="competition" class="col-sm-2 col-form-label">Type</label>
+            <label for="competition" class="col-sm-2 col-form-label" th:text="#{competition.type}"></label>
             <select name="competition" id="competition" class="form-select">
-                <option value="">All</option>
+                <option value="" th:text="#{filter.all}"></option>
                 <option th:each="c : ${competitions}" th:value="${c.id}" th:text="${c.name}" th:selected="${c} == ${competition}"></option>
             </select>
         </div>
@@ -28,12 +28,12 @@
         <thead>
         <tr>
             <th scope="col"></th>
-            <th scope="col">Last name</th>
-            <th scope="col">First name</th>
-            <th scope="col">Location</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Email</th>
-            <th scope="col">Beers</th>
+            <th scope="col" th:text="#{competitor.last_name}"></th>
+            <th scope="col" th:text="#{competitor.first_name}"></th>
+            <th scope="col" th:text="#{competitor.location}"></th>
+            <th scope="col" th:text="#{competitor.phone}"></th>
+            <th scope="col" th:text="#{competitor.email}"></th>
+            <th scope="col" th:text="#{competitor.beers}"></th>
         </tr>
         </thead>
         <tbody>
@@ -41,10 +41,10 @@
             <td>
                 <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${c.id})}"
                    th:if="${#lists.isEmpty(c.beers)}"
-                   data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
+                   data-bs-toggle="modal" data-bs-target="#modalDelete" th:text="#{button.delete}"></a>
                 <button type="button" class="btn btn-secondary"
-                        th:unless="${#lists.isEmpty(c.beers)}" disabled>Delete</button>
-                <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${c.id})}">Edit</a>
+                        th:unless="${#lists.isEmpty(c.beers)}" disabled th:text="#{button.delete}"></button>
+                <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${c.id})}" th:text="#{button.edit}"></a>
             </td>
             <td th:text="${c.lastName}"></td>
             <td th:text="${c.firstName}"></td>

@@ -42,7 +42,7 @@ public class HtmlRegistrationController {
         this.competitionCategoryBeerStyleRepository = competitionCategoryBeerStyleRepository;
     }
 
-    @GetMapping(value = {"/{competitionId}"})
+    @GetMapping(value = {"/{competitionId}/"})
     public String getCompetitionRegistrationIntroduction(@PathVariable("competitionId") UUID competitionId,
                                                          Model model) {
 
@@ -71,6 +71,8 @@ public class HtmlRegistrationController {
         model.addAttribute(HtmlAdminCompetitorController.MODEL_ATTRIBUTE_SINGLE, competitor);
         if (oPersonId.isPresent()) {
             model.addAttribute("activePage", "/registration/competition/" + competitionId + "/person/" + competitor.getId() + "/beers/");
+        } else {
+            model.addAttribute("activePage", "/registration/competition/" + competitionId + "/");
         }
 
         return "competitor-form";
@@ -144,7 +146,7 @@ public class HtmlRegistrationController {
         return "registration-beer-list";
     }
 
-    @GetMapping(value = {"/{competitionId}/person/{personId}/beers/edit/", "/{competitionId}/person/{personId}/beers/edit/{beerId}"})
+    @GetMapping(value = {"/{competitionId}/person/{personId}/beers/edit/", "/{competitionId}/person/{personId}/beers/edit/{beerId}/"})
     public String getBeerForm(@PathVariable("competitionId") UUID competitionId,
                               @PathVariable("personId") UUID competitorId,
                               @PathVariable("beerId") Optional<UUID> oBeerId,
@@ -223,7 +225,7 @@ public class HtmlRegistrationController {
         return "redirect:/registration/competition/" + competitionId + "/person/" + competitorId + "/beers/";
     }
 
-    @GetMapping(value = {"/{competitionId}/person/{personId}/beers/delete/{beerId}"})
+    @GetMapping(value = {"/{competitionId}/person/{personId}/beers/delete/{beerId}/"})
     public String deleteBeer(@PathVariable("competitionId") UUID competitionId,
                              @PathVariable("personId") UUID competitorId,
                              @PathVariable("beerId") Optional<UUID> oBeerId) {

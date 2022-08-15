@@ -5,7 +5,7 @@
 
 <nav class="navbar navbar-light bg-light" th:unless="${showFilters == true}" th:if="${competition != null}">
     <div class="container-fluid">
-        <span class="navbar-brand mb-0 h1" th:text="${competition.name}"></span>
+        <span class="navbar-brand mb-0 h1" th:text="${competition.name} + ' - ' + ${competitor.fullName} + (${#strings.isEmpty(competitor.groupName)} ? '' : ' / ' + ${competitor.groupName})"></span>
     </div>
 </nav>
 
@@ -14,8 +14,8 @@
 
     <div class="row">
         <div class="col">
-            <a class="btn btn-primary" role="button" th:href="@{edit/}">Add new beer</a>
-            <a class="btn btn-primary" role="button" th:href="@{../edit/}">Edit own details</a>
+            <a class="btn btn-primary" role="button" th:href="@{edit/}" th:text="#{button.add_new_beer}"></a>
+            <a class="btn btn-primary" role="button" th:href="@{../edit/}" th:text="#{button.edit_own_details}"></a>
         </div>
     </div>
 
@@ -25,29 +25,29 @@
         <thead>
         <tr>
             <th scope="col"></th>
-            <th scope="col">Category</th>
-            <th scope="col">Style</th>
-            <th scope="col">Competitor</th>
-            <th scope="col">Name</th>
-            <th scope="col">Alc.</th>
-            <th scope="col">IBU</th>
-            <th scope="col">EBC</th>
-            <th scope="col">Comment</th>
+            <th scope="col" th:text="#{beer.number}"></th>
+            <th scope="col" th:text="#{beer.category}"></th>
+            <th scope="col" th:text="#{beer.style}"></th>
+            <th scope="col" th:text="#{beer.name}"></th>
+            <th scope="col" th:text="#{beer.alcohol}"></th>
+            <th scope="col" th:text="#{beer.ibu}"></th>
+            <th scope="col" th:text="#{beer.ebc}"></th>
+            <th scope="col" th:text="#{beer.comment}"></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="b : ${beers}">
             <td>
-                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
-                <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${b.id})}">Edit</a>
+                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete" th:text="#{button.delete}"></a>
+                <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${b.id})}" th:text="#{button.edit}"></a>
             </td>
+            <td th:text="${b.beerNumber}"></td>
             <td th:text="${b.competitionCategoryBeerStyle.competitionCategory.name}"></td>
             <td th:text="${b.competitionCategoryBeerStyle.beerStyle.name}"></td>
-            <td th:text="${b.competitor.fullName}"></td>
             <td th:text="${b.name}"></td>
-            <td th:text="${#numbers.formatDecimal(b.alcoholPercentage, 1, 'DEFAULT', 1, 'COMMA')} + ' %'"></td>
-            <td th:text="${#numbers.formatDecimal(b.ibu, 1, 'DEFAULT', 1, 'COMMA')}"></td>
-            <td th:text="${#numbers.formatDecimal(b.ebc, 1, 'DEFAULT', 1, 'COMMA')}"></td>
+            <td th:text="${#strings.isEmpty(b.alcoholPercentage) ? '' : (#numbers.formatDecimal(b.alcoholPercentage, 1, 'DEFAULT', 1, 'COMMA') + ' %')}"></td>
+            <td th:text="${#numbers.formatDecimal(b.ibu, 1, 'DEFAULT', 0, 'COMMA')}"></td>
+            <td th:text="${#numbers.formatDecimal(b.ebc, 1, 'DEFAULT', 0, 'COMMA')}"></td>
             <td th:text="${b.comment}"></td>
         </tr>
         </tbody>

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <span class="navbar-brand mb-0 h1">Beer competition editor</span>
+        <span class="navbar-brand mb-0 h1" th:text="#{header.admin_editor}"></span>
         <button class="navbar-toggler"
                 type="button"
                 data-mdb-toggle="collapse"
@@ -12,11 +12,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav" th:name="${activePage}">
-                <a th:class="${activePage == '/admin/competitions/'} ? 'nav-link active' : 'nav-link'" href="/admin/competitions/">Competitions</a>
-                <a th:class="${activePage == '/admin/competition-categories/'} ? 'nav-link active' : 'nav-link'" href="/admin/competition-categories/">Competition categories</a>
-                <a th:class="${activePage == '/admin/beer-styles/'} ? 'nav-link active' : 'nav-link'" href="/admin/beer-styles/">Beer styles</a>
-                <a th:class="${activePage == '/admin/competitors/'} ? 'nav-link active' : 'nav-link'" href="/admin/competitors/">Competitors</a>
-                <a th:class="${activePage == '/admin/beers/'} ? 'nav-link active' : 'nav-link'" href="/admin/beers/">Beers</a>
+                <a th:class="${activePage == '/admin/competitions/'} ? 'nav-link active' : 'nav-link'" href="/admin/competitions/" th:text="#{header.competitions}"></a>
+                <a th:class="${activePage == '/admin/competition-categories/'} ? 'nav-link active' : 'nav-link'" href="/admin/competition-categories/" th:text="#{header.competition_categories}"></a>
+                <a th:class="${activePage == '/admin/beer-styles/'} ? 'nav-link active' : 'nav-link'" href="/admin/beer-styles/" th:text="#{header.beer_styles}"></a>
+                <a th:class="${activePage == '/admin/competitors/'} ? 'nav-link active' : 'nav-link'" href="/admin/competitors/" th:text="#{header.competitors}"></a>
+                <a th:class="${activePage == '/admin/beers/'} ? 'nav-link active' : 'nav-link'" href="/admin/beers/" th:text="#{header.beers}"></a>
             </div>
         </div>
     </div>

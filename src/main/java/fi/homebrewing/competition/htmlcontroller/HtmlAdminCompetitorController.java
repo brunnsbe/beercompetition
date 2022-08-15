@@ -59,12 +59,12 @@ public class HtmlAdminCompetitorController extends HtmlAdminController {
         return getRowsList(model, modelAttributes);
     }
 
-    @GetMapping(value = {"/edit", "/edit/{id}"})
+    @GetMapping(value = {"/edit/", "/edit/{id}/"})
     public String getCompetitorForm(@PathVariable("id") Optional<UUID> oId, Model model) {
         return getRowForm(oId, competitorRepository, model, getFormModelAttributes(), Competitor::new);
     }
 
-    @PostMapping(value = {"/upsert", "/upsert/{id}"})
+    @PostMapping(value = {"/upsert/", "/upsert/{id}"})
     public String upsertCompetitor(@PathVariable("id") Optional<UUID> oId, @Valid Competitor competitor, BindingResult result, Model model) {
         oId.ifPresent(competitor::setId);
 
@@ -76,7 +76,7 @@ public class HtmlAdminCompetitorController extends HtmlAdminController {
         return Map.of();
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/delete/{id}/")
     public String deleteBeer(@PathVariable("id") UUID id) {
         return deleteRow(id, competitorRepository);
     }

@@ -75,12 +75,12 @@ public class HtmlAdminBeerController extends HtmlAdminController {
         return getRowsList(model, modelAttributes);
     }
 
-    @GetMapping(value = {"/edit", "/edit/{id}"})
+    @GetMapping(value = {"/edit/", "/edit/{id}/"})
     public String getRowForm(@PathVariable("id") Optional<UUID> oId, Model model) {
         return getRowForm(oId, beerRepository, model, getFormModelAttributes(), Beer::new);
     }
 
-    @PostMapping(value = {"/upsert", "/upsert/{id}"})
+    @PostMapping(value = {"/upsert/", "/upsert/{id}"})
     public String upsertBeer(@PathVariable("id") Optional<UUID> oId, @Valid Beer beer, BindingResult result, Model model) {
         oId.ifPresent(beer::setId);
         return upsertRow(beer, result, model, this::getFormModelAttributes, beerRepository);
@@ -96,7 +96,7 @@ public class HtmlAdminBeerController extends HtmlAdminController {
      );
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/delete/{id}/")
     public String deleteBeer(@PathVariable("id") UUID id) {
         return deleteRow(id, beerRepository);
     }

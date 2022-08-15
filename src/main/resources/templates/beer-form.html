@@ -7,65 +7,67 @@
 </div>
 
 <div class="container">
-    <h3>Edit beer</h3>
+    <h3 th:text="#{header.edit_beer}"></h3>
     <form action="#"
           th:action="${competition != null} ? @{/registration/competition/{competitionId}/person/{competitorId}/beers/upsert/{beerId}(competitionId=${competition.id},competitorId=${competitors[0].id},beerId=${beer.id})} : @{/admin/beers/upsert/{id}(id=${beer.id})}"
           th:object="${beer}"
           method="post">
 
+        <div class="mb-3" th:text="#{form.required_field}"></div>
+
         <div class="mb-3">
-            <label for="competitionCategoryBeerStyle" class="form-label">Competiton, category and style</label>
+            <label for="competitionCategoryBeerStyle" class="form-label" th:text="#{beer.competition_category_and_style}"></label>
             <select th:field="*{competitionCategoryBeerStyle}" id="competitionCategoryBeerStyle" class="form-select">
                 <option th:each="c : ${competitionCategoryBeerStyles}" th:value="${c.id}" th:text="${c.competitionCategory.competition.name} + ' \ ' + ${c.competitionCategory.name} + ' \ '  + ${c.beerStyle.name}">
                 </option>
             </select>
-            <span th:if="${#fields.hasErrors('competitionCategoryBeerStyle')}" th:errors="*{competitionCategoryBeerStyle}"></span>
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('competitionCategoryBeerStyle')}" th:errors="*{competitionCategoryBeerStyle}"></div>
         </div>
 
         <div class="mb-3">
-            <label for="competitor" class="form-label">Competitor</label>
+            <label for="competitor" class="form-label" th:text="#{beer.competitor}"></label>
             <select th:field="*{competitor}" id="competitor" class="form-select">
                 <option th:each="c : ${competitors}" th:value="${c.id}" th:text="${c.fullName}">
                 </option>
             </select>
-            <span th:if="${#fields.hasErrors('competitor')}" th:errors="*{competitor}"></span>
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('competitor')}" th:errors="*{competitor}"></div>
         </div>
 
         <div class="mb-3">
-            <label for="name" class="form-label">Beer name (not shown to judges)</label>
-            <input type="text" th:field="*{name}" id="name" placeholder="Beer name" class="form-control">
-            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+            <label for="name" class="form-label" th:text="#{beer.beer_name_not_shown_to_judges} + ' *'"></label>
+            <input type="text" th:field="*{name}" id="name" th:placeholder="#{beer.beer_name_not_shown_to_judges}" class="form-control">
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
         </div>
 
         <div class="mb-3">
-            <label for="comment" class="form-label">Comment (spices, fruits, etc.)</label>
-            <input type="text" th:field="*{comment}" id="comment" placeholder="Comment" class="form-control">
-            <span th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
+            <label for="comment" class="form-label" th:text="#{beer.comment_spices_fruits_etc}"></label>
+            <input type="text" th:field="*{comment}" id="comment" th:placeholder="#{beer.comment_spices_fruits_etc}" class="form-control">
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></div>
         </div>
 
         <div class="mb-3">
-            <label for="alcoholPercentage" class="form-label">Alcohol percentage</label>
-            <input type="number" th:field="*{alcoholPercentage}" id="alcoholPercentage" placeholder="Alcohol percentage"
+            <label for="alcoholPercentage" class="form-label" th:text="#{beer.alcohol}"></label>
+            <input type="number" th:field="*{alcoholPercentage}" id="alcoholPercentage" th:placeholder="#{beer.alcohol}"
                    step="0.1" class="form-control">
-            <span th:if="${#fields.hasErrors('alcoholPercentage')}" th:errors="*{alcoholPercentage}"></span>
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('alcoholPercentage')}" th:errors="*{alcoholPercentage}"></div>
         </div>
 
         <div class="mb-3">
-            <label for="ibu" class="form-label">IBU (International Bitterness Units)</label>
-            <input type="number" th:field="*{ibu}" id="ibu" placeholder="IBU"
-                   step="0.1" class="form-control">
-            <span th:if="${#fields.hasErrors('ibu')}" th:errors="*{ibu}"></span>
+            <label for="ibu" class="form-label" th:text="#{beer.ibu_international_bitterness_unit}"></label>
+            <input type="number" th:field="*{ibu}" id="ibu" th:placeholder="#{beer.ibu_international_bitterness_unit}"
+                   step="1.0" class="form-control">
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('ibu')}" th:errors="*{ibu}"></div>
         </div>
 
         <div class="mb-3">
-            <label for="ibu" class="form-label">EBC color (European Brewery Convention), EBC = SRM x 1.97</label>
-            <input type="number" th:field="*{ebc}" id="ebc" placeholder="EBC"
-                   step="0.1" class="form-control">
-            <span th:if="${#fields.hasErrors('ebc')}" th:errors="*{ebc}"></span>
+            <label for="ebc" class="form-label" th:text="#{beer.ebc_european_brewery_convention}"></label>
+            <input type="number" th:field="*{ebc}" id="ebc" th:placeholder="#{beer.ebc_european_brewery_convention}"
+                   step="1.0" class="form-control">
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('ebc')}" th:errors="*{ebc}"></div>
         </div>
 
-        <input type="submit" th:value="${beer.id} ? 'Update beer' : 'Insert beer'" class="btn btn-primary">
-        <a class="btn btn-secondary" role="button" th:href="${activePage}">Cancel</a>
+        <input type="submit" th:value="${beer.id} ? #{button.update_beer} : #{button.add_new_beer}" class="btn btn-primary">
+        <a class="btn btn-secondary" role="button" th:href="${activePage}" th:text="#{button.cancel}"></a>
     </form>
 </div>
 

@@ -11,15 +11,15 @@
     <div class="row">
         <div class="col">
             <br/>
-            <a class="btn btn-primary" role="button" th:href="@{edit/}">Create new</a>
+            <a class="btn btn-primary" role="button" th:href="@{edit/}" th:text="#{button.create_new}"></a>
         </div>
     </div>
 
     <form class="row gy-2 gx-3 align-items-center" id="filterForm" th:action="@{''}" th:if="${showFilters == true}">
         <div class="col-auto">
-            <label for="competitionCategory" class="col-sm-2 col-form-label">Competition category</label>
+            <label for="competitionCategory" class="col-sm-2 col-form-label" th:text="#{beer.competition_category}"></label>
             <select name="competitionCategory" id="competitionCategory" class="form-select">
-                <option value="">All</option>
+                <option value="" th:text="#{filter.all}"></option>
                 <option th:each="c : ${competitionCategories}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id} == ${competitionCategory.id}"></option>
             </select>
         </div>
@@ -29,16 +29,16 @@
         <thead>
         <tr>
             <th scope="col"></th>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
+            <th scope="col" th:text="#{beer_style.name}"></th>
+            <th scope="col" th:text="#{beer_style.description}"></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="b : ${beerStyles}">
             <td>
                 <!-- TODO: Only show delete when possible -->
-                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</a>
-                <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${b.id})}">Edit</a>
+                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete" th:text="#{button.delete}"></a>
+                <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${b.id})}" th:text="#{button.edit}"></a>
             </td>
             <td th:text="${b.name}"></td>
             <td th:text="${b.description}"></td>

@@ -141,7 +141,7 @@ public class Beer {
             final Matcher matcher = numberPattern.matcher(competitionCategory);
             if (matcher.find()) {
                 final long competitionCategoryAsLong = Long.parseLong(matcher.group(0));
-                return beerStyle.substring(0, beerStyle.indexOf(' ')) + "-" + ((1000 * competitionCategoryAsLong) + sequenceNumber);
+                return competitionCategoryAsLong + "-" + beerStyle.substring(0, beerStyle.indexOf(' ')) + "-" + sequenceNumber;
             }
         } catch (NumberFormatException e) {
             // Just skip
