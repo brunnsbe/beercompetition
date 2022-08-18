@@ -10,7 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.lang.Nullable;
@@ -24,17 +26,24 @@ public class Competitor {
     @Column(columnDefinition = "uniqueidentifier")
     private UUID id;
     @NotBlank(message = "{firstName.mandatory}")
+    @Size(min = 1, max = 100)
     private String firstName;
     @NotBlank(message = "{lastName.mandatory}")
+    @Size(min = 1, max = 100)
     private String lastName;
     @Nullable
+    @Size(max = 100)
     private String groupName;
     @NotBlank(message = "{location.mandatory}")
+    @Size(min = 1, max = 100)
     private String location;
     @Nullable
+    @Size(max = 100)
     private String phoneNumber;
     @NotBlank(message = "{emailAddress.mandatory}")
     @Column(unique=true)
+    @Email(message = "{emailAddress.not_valid}")
+    @Size(min = 1, max = 100)
     private String emailAddress;
 
     @OneToMany(mappedBy = "competitor")

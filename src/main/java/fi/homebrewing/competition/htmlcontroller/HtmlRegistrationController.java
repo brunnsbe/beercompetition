@@ -1,6 +1,7 @@
 package fi.homebrewing.competition.htmlcontroller;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,6 +15,10 @@ import fi.homebrewing.competition.domain.CompetitionCategoryBeerStyleRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
 import fi.homebrewing.competition.domain.Competitor;
 import fi.homebrewing.competition.domain.CompetitorRepository;
+import fi.homebrewing.competition.email.EmailSender;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,16 +35,25 @@ public class HtmlRegistrationController {
     private final CompetitorRepository competitorRepository;
     private final BeerRepository beerRepository;
     private final CompetitionCategoryBeerStyleRepository competitionCategoryBeerStyleRepository;
+    private final EmailSender emailSender;
+    private final MessageSource messageSource;
+
+    @Value("${SERVER_URL:http://localhost:80}")
+    private String serverURL;
 
     public HtmlRegistrationController(CompetitionRepository competitionRepository,
                                       CompetitorRepository competitorRepository,
                                       BeerRepository beerRepository,
-                                      CompetitionCategoryBeerStyleRepository competitionCategoryBeerStyleRepository) {
+                                      CompetitionCategoryBeerStyleRepository competitionCategoryBeerStyleRepository,
+                                      EmailSender emailSender,
+                                      MessageSource messageSource) {
 
         this.competitionRepository = competitionRepository;
         this.competitorRepository = competitorRepository;
         this.beerRepository = beerRepository;
         this.competitionCategoryBeerStyleRepository = competitionCategoryBeerStyleRepository;
+        this.emailSender = emailSender;
+        this.messageSource = messageSource;
     }
 
     @GetMapping(value = {"/{competitionId}/"})
@@ -83,7 +97,7 @@ public class HtmlRegistrationController {
                                                     @PathVariable("personId") Optional<UUID> oPersonId,
                                                     @Valid Competitor competitor,
                                                     BindingResult result,
-                                                    Model model) throws IllegalAccessException {
+                                                    Model model) {
 
         final Competition competition = competitionRepository.findById(competitionId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
@@ -99,22 +113,49 @@ public class HtmlRegistrationController {
             return "competitor-form";
         }
 
-
         if (oPersonId.isEmpty()) {
             // Prevent email fishing
             final String givenEmailAddress = competitor.getEmailAddress();
             final Optional<Competitor> oCompetitorWithGivenEmailAddress = competitorRepository.findByEmailAddress(givenEmailAddress);
             if (oCompetitorWithGivenEmailAddress.isPresent()) {
-                // TODO: Add email sending
-                throw new IllegalAccessException("Email already exists, link sent by email");
+                sendEmail(
+                    competition,
+                    oCompetitorWithGivenEmailAddress.get(),
+                    "error.the_given_email_address_is_already_registered",
+                    "email.body.please_use_this_link_for_registration"
+                );
+
+                return "redirect:/registration/competition/email_already_exists/";
             }
         }
 
         competitorRepository.save(competitor);
 
-        // TODO: Add email sending when saved if new registration
+        sendEmail(
+            competition,
+            competitor,
+            "email.subject.thank_you_for_registering",
+            "email.body.thank_you_for_registering_here_is_your_link"
+        );
 
         return "redirect:/registration/competition/" + competitionId + "/person/" + competitor.getId() + "/beers/";
+    }
+
+    private void sendEmail(Competition competition, Competitor competitor, String langCodeSubject, String langCodeBody) {
+        final Locale locale = LocaleContextHolder.getLocale();
+        final String subject = messageSource.getMessage(langCodeSubject, null, locale)
+            + " (" + competition.getName() + ")";
+        final String body = messageSource.getMessage(langCodeBody, null, locale)
+            + System.lineSeparator()
+            + serverURL
+            + "/registration/competition/" + competition.getId() + "/person/" + competitor.getId() + "/beers/";
+
+        emailSender.sendEmail(competitor.getEmailAddress(), subject, body);
+    }
+
+    @GetMapping(value = {"/email_already_exists/"})
+    public String emailAlreadyExists() {
+        return "registration-error-email-already-exists";
     }
 
     @GetMapping(value = {"/{competitionId}/person/{personId}/beers/"})

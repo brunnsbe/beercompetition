@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"></head>
+<body>
+<div class="d-flex align-items-center justify-content-center vh-100">
+    <div class="text-center">
+        <p class="fs-3 text-danger" th:text="#{error.the_given_email_address_is_already_registered}"></p>
+        <p class="lead" th:text="#{error.a_link_to_your_registration_page_has_been_sent_to_your_email}"></p>
+        <a href="#" class="btn btn-primary" id="back_button" th:text="#{button.go_back}"></a>
+    </div>
+</div>
+<script>
+    const backLink = document.querySelector('#back_button');
+
+    backLink.setAttribute('href', document.referrer);
+    backLink.addEventListener('click', function (_e) {
+        history.back();
+        return false;
+    });
+</script>
+</body>
+</html>

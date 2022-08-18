@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -22,7 +23,9 @@ public class BeerStyle {
     @Column(columnDefinition = "uniqueidentifier")
     private UUID id;
     @NotBlank(message = "{name.mandatory}")
+    @Size(min = 1, max = 100)
     private String name;
+    @Size(max = 250)
     private String description;
 
     @OneToMany(mappedBy = "beerStyle")

@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
@@ -32,14 +33,18 @@ public class Beer {
     @JoinColumn(name = "competition_category_has_beer_style_id",referencedColumnName = "id")
     private CompetitionCategoryBeerStyle competitionCategoryBeerStyle;
     @NotBlank(message = "{name.mandatory}")
+    @Size(min = 1, max = 100)
     private String name;
+    @Size(max = 250)
     private String comment;
 
     @Max(value = 30)
     private Double alcoholPercentage;
 
+    @Max(value = 1000)
     private Double ibu;
 
+    @Max(value = 1000)
     private Double ebc;
 
     private Double score;

@@ -15,6 +15,7 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.lang.Nullable;
@@ -28,8 +29,10 @@ public class Competition {
     @Column(columnDefinition = "uniqueidentifier")
     private UUID id;
     @NotBlank(message = "{name.mandatory}")
+    @Size(min = 1, max = 100)
     private String name;
     @Nullable
+    @Size(max = 250)
     private String description;
 
     @Enumerated(EnumType.STRING)
