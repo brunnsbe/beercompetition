@@ -111,6 +111,12 @@
               </resource>
             </resources>
           </deployment>
+          <appSettings>
+            <property>
+              <name>JAVA_OPTS</name>
+              <value>-Xms1024m -Xmx1024m</value>
+            </property>
+          </appSettings>
         </configuration>
       </plugin>
     </plugins>
