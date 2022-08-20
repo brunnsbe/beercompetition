@@ -26,7 +26,8 @@ public record TestDataLoader(BeerRepository beerRepository,
                              BeerStyleRepository beerStyleRepository,
                              CompetitionCategoryBeerStyleRepository competitionCategoryBeerStyleRepository) {
 
-    @PostConstruct
+
+    //@PostConstruct Disabled to avoid test data pre-fill
     private void loadData() {
         final List<Competition> competitions = this.competitionRepository.saveAll(
             List.of(
