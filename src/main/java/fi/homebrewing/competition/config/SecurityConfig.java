@@ -17,28 +17,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     UserDetailsService authentication() {
-        UserDetails peter = User.builder()
-            .username("peter")
-            .password(pwEncoder.encode("ppassword"))
-            .roles("USER")
-            .build();
-
         UserDetails jodie = User.builder()
-            .username("jodie")
-            .password(pwEncoder.encode("jpassword"))
+            .username("admin")
+            .password("{bcrypt}$2a$10$SfqeJQdncuxx.B8L2nUYfegIjOdyJl3AW1kqcrZuoeGaOPktD613G")
             .roles("USER", "ADMIN")
             .build();
 
-        System.out.println("   >>> Peter's password: " + peter.getPassword());
-        System.out.println("   >>> Jodie's password: " + jodie.getPassword());
-
-        return new InMemoryUserDetailsManager(peter, jodie);
+        return new InMemoryUserDetailsManager(jodie);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-            .mvcMatchers("/api/**").permitAll()
             .mvcMatchers("/registration/**").permitAll()
             .mvcMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated()
