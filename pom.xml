@@ -94,7 +94,7 @@
           <subscriptionId>d24b65cd-e232-454a-954f-bc45b5919418</subscriptionId>
           <resourceGroup>general_resource_group</resourceGroup>
           <appName>beer-competition</appName>
-          <pricingTier>F1</pricingTier>
+          <pricingTier>B1</pricingTier>
           <region>northeurope</region>
           <runtime>
             <os>Linux</os>
