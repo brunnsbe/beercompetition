@@ -235,7 +235,11 @@ public class HtmlRegistrationController {
     public String upsertBeer(@PathVariable("competitionId") UUID competitionId,
                              @PathVariable("personId") UUID competitorId,
                              @PathVariable("beerId") Optional<UUID> oBeerId,
-                             @Valid Beer beer, BindingResult result, Model model) {
+                             @Valid Beer beer,
+                             BindingResult result,
+                             Model model) {
+
+        // TODO: Do not let the user update the finalist and score fields
 
         oBeerId.ifPresent(beer::setId);
 

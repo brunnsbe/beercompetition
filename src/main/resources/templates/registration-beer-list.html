@@ -6,6 +6,15 @@
 <nav class="navbar navbar-light bg-light" th:unless="${showFilters == true}" th:if="${competition != null}">
     <div class="container-fluid">
         <span class="navbar-brand mb-0 h1" th:text="${competition.name} + ' - ' + ${competitor.fullName} + (${#strings.isEmpty(competitor.groupName)} ? '' : ' / ' + ${competitor.groupName})"></span>
+        <div class="nav-item dropdown justify-content-end">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{header.language}">
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="?lang=en" th:text="#{header.language.english}"></a></li>
+                <li><a class="dropdown-item" href="?lang=fi" th:text="#{header.language.finnish}"></a></li>
+                <li><a class="dropdown-item" href="?lang=sv" th:text="#{header.language.swedish}"></a></li>
+            </ul>
+        </div>
     </div>
 </nav>
 

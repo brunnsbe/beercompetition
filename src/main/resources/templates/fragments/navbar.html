@@ -17,6 +17,15 @@
                 <a th:class="${activePage == '/admin/beer-styles/'} ? 'nav-link active' : 'nav-link'" href="/admin/beer-styles/" th:text="#{header.beer_styles}"></a>
                 <a th:class="${activePage == '/admin/competitors/'} ? 'nav-link active' : 'nav-link'" href="/admin/competitors/" th:text="#{header.competitors}"></a>
                 <a th:class="${activePage == '/admin/beers/'} ? 'nav-link active' : 'nav-link'" href="/admin/beers/" th:text="#{header.beers}"></a>
+                <div class="nav-item dropdown justify-content-end">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{header.language}">
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="?lang=en" th:text="#{header.language.english}"></a></li>
+                        <li><a class="dropdown-item" href="?lang=fi" th:text="#{header.language.finnish}"></a></li>
+                        <li><a class="dropdown-item" href="?lang=sv" th:text="#{header.language.swedish}"></a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
