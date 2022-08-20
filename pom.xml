@@ -11,8 +11,8 @@
 	<groupId>fi.homebrewing</groupId>
 	<artifactId>competition</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>competition</name>
-	<description>Homebrewing competition</description>
+	<name>beer-competition</name>
+	<description>Beer competition</description>
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud-azure.version>4.3.0</spring-cloud-azure.version>
