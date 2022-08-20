@@ -9,12 +9,12 @@
 <div class="container">
     <h3 th:text="#{header.edit_competitor}"></h3>
 
+    <div class="mb-3" th:text="#{form.required_field}"></div>
+
     <div class="mb-3" th:if="${competition != null}">
         <label for="competition" class="form-label" th:text="#{beer.competition}"></label>
         <input type="text" disabled="disabled" th:field="*{competition.name}" id="competition" th:placeholder="#{beer.competition}" class="form-control">
     </div>
-
-    <div class="mb-3" th:text="#{form.required_field}"></div>
 
     <form action="#"
           th:action="${competition != null} ? @{/registration/competition/{competitionId}/person/upsert/{competitorId}(competitionId=${competition.id},competitorId=${competitor.id})} : @{/admin/competitors/upsert/{id}(id=${competitor.id})}"
