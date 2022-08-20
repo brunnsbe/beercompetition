@@ -49,6 +49,8 @@ public class Beer {
 
     private Double score;
 
+    private Boolean finalist;
+
     // Notice, that we here use SQL Server column definition for the sequence
     @Generated(GenerationTime.INSERT)
     @Column(columnDefinition = "int identity(1,1)", updatable = false)
@@ -152,5 +154,13 @@ public class Beer {
             // Just skip
         }
         return beerStyle.substring(0, beerStyle.indexOf(' ')) + "-" + sequenceNumber;
+    }
+
+    public Boolean getFinalist() {
+        return finalist;
+    }
+
+    public void setFinalist(Boolean finalist) {
+        this.finalist = finalist;
     }
 }
