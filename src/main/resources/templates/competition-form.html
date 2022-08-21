@@ -34,6 +34,12 @@
         </div>
 
         <div class="mb-3">
+            <label for="deadlineDate" class="form-label" th:text="#{competition.deadline_date}"></label>
+            <input type="date" th:field="*{deadlineDate}" id="deadlineDate" th:placeholder="#{competition.deadline_date}" class="form-control">
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('deadlineDate')}" th:errors="*{deadlineDate}"></div>
+        </div>
+
+        <div class="mb-3">
             <label for="type" class="form-label" th:text="#{competition.type}"></label>
             <select th:field="*{type}" id="type" class="form-select">
                 <option th:each="type : ${T(fi.homebrewing.competition.domain.Competition.Type).values()}" th:value="${type}" th:text="${type}">

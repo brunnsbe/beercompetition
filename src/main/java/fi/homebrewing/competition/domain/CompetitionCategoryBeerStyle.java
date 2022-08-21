@@ -9,8 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -33,8 +33,8 @@ public class CompetitionCategoryBeerStyle {
     @JoinColumn(name = "beer_style_id")
     private BeerStyle beerStyle;
 
-    //@OneToMany(mappedBy = "competitionCategoryHasBeerStyle")
-    //private Set<Beer> beers;
+    @OneToMany(mappedBy = "competitionCategoryBeerStyle")
+    private Set<Beer> beer;
 
     public CompetitionCategoryBeerStyle() {
     }
@@ -68,8 +68,7 @@ public class CompetitionCategoryBeerStyle {
         this.id = id;
     }
 
-    @Transient
     public Set<Beer> getBeers() {
-        return Set.of();
+        return beer;
     }
 }

@@ -38,7 +38,6 @@ public class HtmlAdminBeerController extends HtmlAdminController {
     private final BeerRepository beerRepository;
     private final CompetitionCategoryBeerStyleRepository competitionCategoryBeerStyleRepository;
     private final CompetitorRepository competitorRepository;
-    private final CompetitionCategoryRepository competitionCategoryRepository;
     private final CompetitionRepository competitionRepository;
 
     public HtmlAdminBeerController(BeerRepository beerRepository,
@@ -50,7 +49,6 @@ public class HtmlAdminBeerController extends HtmlAdminController {
         this.beerRepository = beerRepository;
         this.competitionCategoryBeerStyleRepository = competitionCategoryBeerStyleRepository;
         this.competitorRepository = competitorRepository;
-        this.competitionCategoryRepository = competitionCategoryRepository;
         this.competitionRepository = competitionRepository;
     }
 
@@ -90,7 +88,7 @@ public class HtmlAdminBeerController extends HtmlAdminController {
     protected Map<String, ?> getFormModelAttributes() {
      return Map.of(
          "competitionCategoryBeerStyles",
-         competitionCategoryBeerStyleRepository.findAll(),
+         competitionCategoryBeerStyleRepository.findAllOrderByCategoryNameAscBeerStyleAsc(),
          HtmlAdminCompetitorController.MODEL_ATTRIBUTE_MULTIPLE,
          competitorRepository.findAllByOrderByLastNameAscFirstNameAsc()
      );

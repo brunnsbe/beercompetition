@@ -1,5 +1,6 @@
 package fi.homebrewing.competition.htmlcontroller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -62,6 +63,10 @@ public class HtmlRegistrationController {
 
         final Competition competition = competitionRepository.findById(competitionId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
+
+        if (competition.hasDeadlinePassed()) {
+            return "registration-error-deadline-date-passed";
+        }
 
         model.addAttribute(HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE, competition);
 
@@ -195,6 +200,11 @@ public class HtmlRegistrationController {
 
         final Competition competition = competitionRepository.findById(competitionId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
+
+        if (competition.hasDeadlinePassed()) {
+            return "registration-error-deadline-date-passed";
+        }
+
         final Competitor competitor = competitorRepository.findById(competitorId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitorId));
 
@@ -239,12 +249,15 @@ public class HtmlRegistrationController {
                              BindingResult result,
                              Model model) {
 
-        // TODO: Do not let the user update the finalist and score fields
-
         oBeerId.ifPresent(beer::setId);
 
         final Competition competition = competitionRepository.findById(competitionId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
+
+        if (competition.hasDeadlinePassed()) {
+            return "registration-error-deadline-date-passed";
+        }
+
         final Competitor competitor = competitorRepository.findById(competitorId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitorId));
 
@@ -265,6 +278,13 @@ public class HtmlRegistrationController {
             return "beer-form";
         }
 
+        // Prevent user from overwriting the current score and finalist
+        oBeerId.ifPresent(id -> {
+            final Beer currentBeer = beerRepository.getReferenceById(id);
+            beer.setScore(currentBeer.getScore());
+            beer.setFinalist(currentBeer.getFinalist());
+        });
+
         beerRepository.save(beer);
 
         return "redirect:/registration/competition/" + competitionId + "/person/" + competitorId + "/beers/";
@@ -277,6 +297,11 @@ public class HtmlRegistrationController {
 
         final Competition competition = competitionRepository.findById(competitionId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitionId));
+
+        if (competition.hasDeadlinePassed()) {
+            return "registration-error-deadline-date-passed";
+        }
+
         final Competitor competitor = competitorRepository.findById(competitorId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid Id:" + competitorId));
 

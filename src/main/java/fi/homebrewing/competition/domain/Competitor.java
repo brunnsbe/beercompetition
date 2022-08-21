@@ -73,7 +73,7 @@ public class Competitor {
         return firstName;
     }
 
-    public void setFirstName(@Nullable String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 

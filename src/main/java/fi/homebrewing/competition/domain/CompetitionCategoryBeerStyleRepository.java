@@ -1,7 +1,6 @@
 package fi.homebrewing.competition.domain;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +15,10 @@ public interface CompetitionCategoryBeerStyleRepository extends JpaRepository<Co
         " INNER JOIN BeerStyle bs ON ccbs.beerStyle = bs" +
         " WHERE cc.competition = (:competition) ORDER BY cc.name, bs.name")
     List<CompetitionCategoryBeerStyle> findAllByCompetitionOrderByCategoryNameAscBeerStyleAsc(@Param("competition") Competition competition);
+
+    @Query("SELECT ccbs FROM CompetitionCategoryBeerStyle ccbs" +
+        " INNER JOIN CompetitionCategory cc ON ccbs.competitionCategory = cc" +
+        " INNER JOIN BeerStyle bs ON ccbs.beerStyle = bs" +
+        " ORDER BY cc.name, bs.name")
+    List<CompetitionCategoryBeerStyle> findAllOrderByCategoryNameAscBeerStyleAsc();
 }

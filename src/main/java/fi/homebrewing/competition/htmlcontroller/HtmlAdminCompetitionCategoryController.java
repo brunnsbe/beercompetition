@@ -74,7 +74,7 @@ public class HtmlAdminCompetitionCategoryController extends HtmlAdminController 
         oId.ifPresent(competitionCategory::setId);
 
         // Ugly way of handling bindings to beer styles, but it works :)
-        if (!result.hasErrors()) {
+        final Runnable runAfterSave = () -> {
             final List<CompetitionCategoryBeerStyle> currentCompetitionCategoryBeerStyles =
                 competitionCategoryBeerStyleRepository.findAllByCompetitionCategory(competitionCategory);
             final List<CompetitionCategoryBeerStyle> competitionCategoryBeerStylesToSave = competitionCategory.getBeerStyles().stream()
@@ -98,9 +98,9 @@ public class HtmlAdminCompetitionCategoryController extends HtmlAdminController 
 
             competitionCategoryBeerStyleRepository.deleteAll(competitionCategoryBeerStylesToDelete);
             competitionCategoryBeerStyleRepository.saveAll(competitionCategoryBeerStylesToInsert);
-        }
+        };
 
-        return upsertRow(competitionCategory, result, model, this::getFormModelAttributes, competitionCategoryRepository);
+        return upsertRow(competitionCategory, result, model, this::getFormModelAttributes, competitionCategoryRepository, runAfterSave);
     }
 
     @Override

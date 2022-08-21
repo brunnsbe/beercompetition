@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"></head>
+<body>
+<div class="d-flex align-items-center justify-content-center vh-100">
+    <div class="text-center">
+        <p class="fs-3 text-danger" th:text="#{error.deadline_date_passed}"></p>
+        <p class="lead" th:text="#{error.deadline_date_passed_beer_can_not_be_added_or_edited}"></p>
+        <a href="#" class="btn btn-primary" id="back_button" th:text="#{button.go_back}"></a>
+    </div>
+</div>
+<script>
+    const backLink = document.querySelector('#back_button');
+
+    backLink.setAttribute('href', document.referrer);
+    backLink.addEventListener('click', function (_e) {
+        history.back();
+        return false;
+    });
+</script>
+</body>
+</html>

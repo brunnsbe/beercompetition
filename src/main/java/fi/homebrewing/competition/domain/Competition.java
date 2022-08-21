@@ -1,6 +1,6 @@
 package fi.homebrewing.competition.domain;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -18,10 +18,18 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
 @Entity
 public class Competition {
+    public enum Type {
+        COMMERCIAL,
+        HOMEBREWING,
+        MIXED,
+        OTHER
+    }
+
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
@@ -40,7 +48,8 @@ public class Competition {
 
     @Nullable
     @Column(columnDefinition = "DATE")
-    private LocalDate deadlineDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date deadlineDate;
 
     @Lob
     @Nullable
@@ -60,14 +69,21 @@ public class Competition {
         this.introductionText = introductionText;
     }
 
-    public enum Type {
-        COMMERCIAL,
-        HOMEBREWING,
-        MIXED,
-        OTHER
+    @Nullable
+    public Date getDeadlineDate() {
+        return deadlineDate;
     }
 
-    public Competition(String name, String description, Type type, LocalDate deadlineDate) {
+    public void setDeadlineDate(@Nullable Date deadlineDate) {
+        this.deadlineDate = deadlineDate;
+    }
+
+
+    public boolean hasDeadlinePassed() {
+        return deadlineDate != null && new Date().after(deadlineDate);
+    }
+
+    public Competition(String name, String description, Type type, Date deadlineDate) {
         this.name = name;
         this.description = description;
         this.type = type;
@@ -113,20 +129,18 @@ public class Competition {
 
     @Transient
     public Set<Beer> getBeers() {
-        return competitionCategories.stream().flatMap(v -> v.getCompetitionCategoryBeerStyles().stream())
+        return competitionCategories.stream()
+            .flatMap(v -> v.getCompetitionCategoryBeerStyles().stream())
             .flatMap(v -> v.getBeers().stream())
             .collect(Collectors.toSet());
     }
 
     @Transient
     public Set<Competitor> getCompetitors() {
-        return Set.of();
-        // ERROR
-        /*
         return competitionCategories.stream()
-            .flatMap(v -> v.getCompetitionCategoryHasBeerStyles().stream())
-            .flatMap(v -> v.getBeers().stream()).map(Beer::getCompetitor)
+            .flatMap(v -> v.getCompetitionCategoryBeerStyles().stream())
+            .flatMap(v -> v.getBeers().stream())
+            .map(Beer::getCompetitor)
             .collect(Collectors.toSet());
-         */
     }
 }

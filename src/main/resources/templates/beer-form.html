@@ -8,18 +8,23 @@
 
 <div class="container">
     <h3 th:text="#{header.edit_beer}"></h3>
+
+    <div class="mb-3" th:text="#{form.required_field}"></div>
+
+    <div class="mb-3" th:if="${competition != null}">
+        <label for="competition" class="form-label" th:text="#{beer.competition}"></label>
+        <input type="text" disabled="disabled" th:field="*{competition.name}" id="competition" th:placeholder="#{beer.competition}" class="form-control">
+    </div>
+
     <form action="#"
           th:action="${competition != null} ? @{/registration/competition/{competitionId}/person/{competitorId}/beers/upsert/{beerId}(competitionId=${competition.id},competitorId=${competitors[0].id},beerId=${beer.id})} : @{/admin/beers/upsert/{id}(id=${beer.id})}"
           th:object="${beer}"
           method="post">
 
-        <div class="mb-3" th:text="#{form.required_field}"></div>
-
         <div class="mb-3">
             <label for="competitionCategoryBeerStyle" class="form-label" th:text="#{beer.competition_category_and_style}"></label>
             <select th:field="*{competitionCategoryBeerStyle}" id="competitionCategoryBeerStyle" class="form-select">
-                <option th:each="c : ${competitionCategoryBeerStyles}" th:value="${c.id}" th:text="${c.competitionCategory.competition.name} + ' \ ' + ${c.competitionCategory.name} + ' \ '  + ${c.beerStyle.name}">
-                </option>
+                <option th:each="c : ${competitionCategoryBeerStyles}" th:value="${c.id}" th:text="${competition == null} ? (${c.competitionCategory.competition.name} + ' \ ' + ${c.competitionCategory.name} + ' \ '  + ${c.beerStyle.name}) : (${c.competitionCategory.name} + ' \ '  + ${c.beerStyle.name})"></option>
             </select>
             <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('competitionCategoryBeerStyle')}" th:errors="*{competitionCategoryBeerStyle}"></div>
         </div>

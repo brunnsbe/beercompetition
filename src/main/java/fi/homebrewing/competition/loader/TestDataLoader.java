@@ -2,8 +2,6 @@ package fi.homebrewing.competition.loader;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import fi.homebrewing.competition.domain.Beer;
 import fi.homebrewing.competition.domain.BeerRepository;
 import fi.homebrewing.competition.domain.BeerStyle;

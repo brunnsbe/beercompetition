@@ -23,7 +23,7 @@
 
     <div class="row">
         <div class="col">
-            <a class="btn btn-primary" role="button" th:href="@{edit/}" th:text="#{button.add_new_beer}"></a>
+            <a class="btn btn-primary" role="button" th:href="@{edit/}" th:text="#{button.add_new_beer}" th:if="${!competition.hasDeadlinePassed}"></a>
             <a class="btn btn-primary" role="button" th:href="@{../edit/}" th:text="#{button.edit_own_details}"></a>
         </div>
     </div>
@@ -47,10 +47,10 @@
         <tbody>
         <tr th:each="b : ${beers}">
             <td>
-                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete" th:text="#{button.delete}"></a>
-                <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${b.id})}" th:text="#{button.edit}"></a>
+                <a class="btn btn-secondary" role="button" th:data-href="@{delete/{id}/(id=${b.id})}" data-bs-toggle="modal" data-bs-target="#modalDelete" th:text="#{button.delete}" th:if="${!competition.hasDeadlinePassed}"></a>
+                <a class="btn btn-primary" role="button" th:href="@{edit/{id}/(id=${b.id})}" th:text="#{button.edit}" th:if="${!competition.hasDeadlinePassed}"></a>
             </td>
-            <td th:text="${b.beerNumber}"></td>
+            <td th:text="${b.beerNumber}" class="text-success"></td>
             <td th:text="${b.competitionCategoryBeerStyle.competitionCategory.name}"></td>
             <td th:text="${b.competitionCategoryBeerStyle.beerStyle.name}"></td>
             <td th:text="${b.name}"></td>

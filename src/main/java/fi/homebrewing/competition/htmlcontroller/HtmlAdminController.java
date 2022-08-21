@@ -57,12 +57,24 @@ public abstract class HtmlAdminController {
                                    Model model,
                                    Supplier<Map<String, ?>> modelAttributes,
                                    JpaRepository<T, UUID> repository) {
+
+        return upsertRow(row, result, model, modelAttributes, repository, () -> {});
+    }
+
+    protected <T> String upsertRow(T row,
+                                   BindingResult result,
+                                   Model model,
+                                   Supplier<Map<String, ?>> modelAttributes,
+                                   JpaRepository<T, UUID> repository,
+                                   Runnable runAfterSave) {
         if (result.hasErrors()) {
             addModelAttributes(model, modelAttributes.get());
             return getTemplateForm();
         }
 
         repository.save(row);
+        runAfterSave.run();
+
         return "redirect:" + getActivePage();
     }
 
