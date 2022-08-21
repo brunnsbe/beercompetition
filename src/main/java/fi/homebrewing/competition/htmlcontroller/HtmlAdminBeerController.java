@@ -11,7 +11,6 @@ import fi.homebrewing.competition.domain.Beer;
 import fi.homebrewing.competition.domain.BeerRepository;
 import fi.homebrewing.competition.domain.Competition;
 import fi.homebrewing.competition.domain.CompetitionCategoryBeerStyleRepository;
-import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
 import fi.homebrewing.competition.domain.CompetitorRepository;
 import org.springframework.data.repository.query.Param;
@@ -43,7 +42,6 @@ public class HtmlAdminBeerController extends HtmlAdminController {
     public HtmlAdminBeerController(BeerRepository beerRepository,
                                    CompetitionCategoryBeerStyleRepository competitionCategoryBeerStyleRepository,
                                    CompetitorRepository competitorRepository,
-                                   CompetitionCategoryRepository competitionCategoryRepository,
                                    CompetitionRepository competitionRepository) {
 
         this.beerRepository = beerRepository;

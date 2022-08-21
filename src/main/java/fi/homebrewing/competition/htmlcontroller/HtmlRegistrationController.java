@@ -1,6 +1,5 @@
 package fi.homebrewing.competition.htmlcontroller;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
