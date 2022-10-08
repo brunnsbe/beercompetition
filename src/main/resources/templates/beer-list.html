@@ -43,6 +43,9 @@
             <th scope="col" th:text="#{beer.alcohol}"></th>
             <th scope="col" th:text="#{beer.ibu}"></th>
             <th scope="col" th:text="#{beer.ebc}"></th>
+            <th scope="col" th:text="#{beer.delivered}"></th>
+            <th scope="col" th:text="#{beer.finalist}"></th>
+            <th scope="col" th:text="#{beer.score}"></th>
             <th scope="col" th:text="#{beer.comment}"></th>
         </tr>
         </thead>
@@ -62,6 +65,9 @@
             <td th:text="${#numbers.formatDecimal(b.alcoholPercentage, 1, 'DEFAULT', 1, 'COMMA')} + ' %'"></td>
             <td th:text="${#numbers.formatDecimal(b.ibu, 1, 'DEFAULT', 1, 'COMMA')}"></td>
             <td th:text="${#numbers.formatDecimal(b.ebc, 1, 'DEFAULT', 1, 'COMMA')}"></td>
+            <td th:text="${b.delivered}"></td>
+            <td th:text="${b.finalist}"></td>
+            <td th:text="${#numbers.formatDecimal(b.score, 1, 'DEFAULT', 0, 'COMMA')}"></td>
             <td th:text="${b.comment}"></td>
         </tr>
         </tbody>

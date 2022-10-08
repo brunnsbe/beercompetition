@@ -1,5 +1,6 @@
 package fi.homebrewing.competition.htmlcontroller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,7 +11,9 @@ import javax.validation.Valid;
 import fi.homebrewing.competition.domain.Beer;
 import fi.homebrewing.competition.domain.BeerRepository;
 import fi.homebrewing.competition.domain.Competition;
+import fi.homebrewing.competition.domain.CompetitionCategory;
 import fi.homebrewing.competition.domain.CompetitionCategoryBeerStyleRepository;
+import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
 import fi.homebrewing.competition.domain.CompetitorRepository;
 import org.springframework.data.repository.query.Param;
@@ -38,33 +41,44 @@ public class HtmlAdminBeerController extends HtmlAdminController {
     private final CompetitionCategoryBeerStyleRepository competitionCategoryBeerStyleRepository;
     private final CompetitorRepository competitorRepository;
     private final CompetitionRepository competitionRepository;
+    private final CompetitionCategoryRepository competitionCategoryRepository;
 
     public HtmlAdminBeerController(BeerRepository beerRepository,
                                    CompetitionCategoryBeerStyleRepository competitionCategoryBeerStyleRepository,
                                    CompetitorRepository competitorRepository,
-                                   CompetitionRepository competitionRepository) {
+                                   CompetitionRepository competitionRepository,
+                                   CompetitionCategoryRepository competitionCategoryRepository) {
 
         this.beerRepository = beerRepository;
         this.competitionCategoryBeerStyleRepository = competitionCategoryBeerStyleRepository;
         this.competitorRepository = competitorRepository;
         this.competitionRepository = competitionRepository;
+        this.competitionCategoryRepository = competitionCategoryRepository;
     }
 
     @GetMapping("/")
-    public String getBeersList(Model model, @Param("competition") Competition competition) {
+    public String getBeersList(Model model,
+                               @Param("competition") Competition competition,
+                               @Param("competitionCategory") CompetitionCategory competitionCategory) {
+
         final List<Beer> allBeers = beerRepository.findAll();
 
-        // TODO: Add filter for category
         final Map<String, ?> modelAttributes = Map.of(
             // Filters
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
             competitionRepository.findAllByCompetitionCategoryIsNotNullOrderByName(),
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE,
             competition,
+            HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_MULTIPLE,
+            competitionCategoryRepository.findDistinctByBeerStylesIsNotNullOrderByName(),
+            HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_SINGLE,
+            competitionCategory,
             // Table
             MODEL_ATTRIBUTE_MULTIPLE,
             allBeers.stream()
                 .filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategoryBeerStyle().getCompetitionCategory().getCompetition()))
+                .filter(v -> competitionCategory.getId() == null || competitionCategory.equals(v.getCompetitionCategoryBeerStyle().getCompetitionCategory()))
+                .sorted(Comparator.nullsLast(Comparator.comparing(Beer::getScore).reversed()))
                 .toList()
         );
 
