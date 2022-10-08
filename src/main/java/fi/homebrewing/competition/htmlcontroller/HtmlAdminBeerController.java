@@ -16,7 +16,7 @@ import fi.homebrewing.competition.domain.CompetitionCategoryBeerStyleRepository;
 import fi.homebrewing.competition.domain.CompetitionCategoryRepository;
 import fi.homebrewing.competition.domain.CompetitionRepository;
 import fi.homebrewing.competition.domain.CompetitorRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * TODO:
@@ -58,8 +59,8 @@ public class HtmlAdminBeerController extends HtmlAdminController {
 
     @GetMapping("/")
     public String getBeersList(Model model,
-                               @Param("competition") Competition competition,
-                               @Param("competitionCategory") CompetitionCategory competitionCategory) {
+                               @Nullable @RequestParam("competition") UUID competitionId,
+                               @Nullable @RequestParam("competitionCategory") UUID competitionCategoryId) {
 
         final List<Beer> allBeers = beerRepository.findAll();
 
@@ -68,17 +69,17 @@ public class HtmlAdminBeerController extends HtmlAdminController {
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_MULTIPLE,
             competitionRepository.findAllByCompetitionCategoryIsNotNullOrderByName(),
             HtmlAdminCompetitionController.MODEL_ATTRIBUTE_SINGLE,
-            competition,
+            competitionId == null ? new Competition() : competitionRepository.findById(competitionId).orElseGet(Competition::new),
             HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_MULTIPLE,
             competitionCategoryRepository.findDistinctByBeerStylesIsNotNullOrderByName(),
             HtmlAdminCompetitionCategoryController.MODEL_ATTRIBUTE_SINGLE,
-            competitionCategory,
+            competitionCategoryId == null ? new CompetitionCategory() : competitionCategoryRepository.findById(competitionCategoryId).orElseGet(CompetitionCategory::new),
             // Table
             MODEL_ATTRIBUTE_MULTIPLE,
             allBeers.stream()
-                .filter(v -> competition.getId() == null || competition.equals(v.getCompetitionCategoryBeerStyle().getCompetitionCategory().getCompetition()))
-                .filter(v -> competitionCategory.getId() == null || competitionCategory.equals(v.getCompetitionCategoryBeerStyle().getCompetitionCategory()))
-                .sorted(Comparator.nullsLast(Comparator.comparing(Beer::getScore).reversed()))
+                .filter(v -> competitionId == null || competitionId.equals(v.getCompetitionCategoryBeerStyle().getCompetitionCategory().getCompetition().getId()))
+                .filter(v -> competitionCategoryId == null || competitionCategoryId.equals(v.getCompetitionCategoryBeerStyle().getCompetitionCategory().getId()))
+                .sorted(Comparator.comparing(Beer::getScore, Comparator.nullsFirst(Comparator.naturalOrder())).reversed())
                 .toList()
         );
 

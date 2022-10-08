@@ -73,15 +73,19 @@
 
         <div class="mb-3" th:if="${competition == null}">
             <label for="delivered" class="form-label" th:text="#{beer.delivered}"></label>
-            <input type="checkbox" th:field="*{delivered}" id="delivered" th:placeholder="#{beer.delivered}"
-                   step="1.0" class="form-control">
+            <select class="form-control" th:field="*{delivered}" id="delivered">
+                <option th:value="0" th:text="#{filter.no}"></option>
+                <option th:value="1" th:text="#{filter.yes}"></option>
+            </select>
             <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('delivered')}" th:errors="*{delivered}"></div>
         </div>
 
         <div class="mb-3" th:if="${competition == null}">
             <label for="finalist" class="form-label" th:text="#{beer.finalist}"></label>
-            <input type="checkbox" th:field="*{finalist}" id="finalist" th:placeholder="#{beer.finalist}"
-                   step="1.0" class="form-control">
+            <select class="form-control" th:field="*{finalist}" id="finalist">
+                <option th:value="0" th:text="#{filter.no}"></option>
+                <option th:value="1" th:text="#{filter.yes}"></option>
+            </select>
             <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('finalist')}" th:errors="*{finalist}"></div>
         </div>
 

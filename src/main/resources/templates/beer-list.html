@@ -28,6 +28,13 @@
                 <option th:each="c : ${competitions}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id} == ${competition.id}"></option>
             </select>
         </div>
+        <div class="col-auto">
+            <label for="competitionCategory" class="col-sm-2 col-form-label" th:text="#{beer.competition_category}"></label>
+            <select name="competitionCategory" id="competitionCategory" class="form-select">
+                <option value="" th:text="#{filter.all}"></option>
+                <option th:each="c : ${competitionCategories}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id} == ${competitionCategory.id}"></option>
+            </select>
+        </div>
     </form>
 
     <table class="table">
@@ -65,8 +72,8 @@
             <td th:text="${#numbers.formatDecimal(b.alcoholPercentage, 1, 'DEFAULT', 1, 'COMMA')} + ' %'"></td>
             <td th:text="${#numbers.formatDecimal(b.ibu, 1, 'DEFAULT', 1, 'COMMA')}"></td>
             <td th:text="${#numbers.formatDecimal(b.ebc, 1, 'DEFAULT', 1, 'COMMA')}"></td>
-            <td th:text="${b.delivered}"></td>
-            <td th:text="${b.finalist}"></td>
+            <td th:text="${b.delivered} ? #{filter.yes} : ''"></td>
+            <td th:text="${b.finalist} ? #{filter.yes} : ''"></td>
             <td th:text="${#numbers.formatDecimal(b.score, 1, 'DEFAULT', 0, 'COMMA')}"></td>
             <td th:text="${b.comment}"></td>
         </tr>
