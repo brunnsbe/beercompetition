@@ -51,6 +51,8 @@ public class Beer {
 
     private Boolean finalist;
 
+    private Boolean delivered;
+
     // Notice, that we here use SQL Server column definition for the sequence
     @Generated(GenerationTime.INSERT)
     @Column(columnDefinition = "int identity(1,1)", updatable = false)
@@ -162,5 +164,13 @@ public class Beer {
 
     public void setFinalist(Boolean finalist) {
         this.finalist = finalist;
+    }
+
+    public Boolean getDelivered() {
+        return delivered;
+    }
+
+    public void setDelivered(Boolean delivered) {
+        this.delivered = delivered;
     }
 }

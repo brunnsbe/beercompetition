@@ -282,6 +282,7 @@ public class HtmlRegistrationController {
             final Beer currentBeer = beerRepository.getReferenceById(id);
             beer.setScore(currentBeer.getScore());
             beer.setFinalist(currentBeer.getFinalist());
+            beer.setDelivered(currentBeer.getDelivered());
         });
 
         beerRepository.save(beer);
