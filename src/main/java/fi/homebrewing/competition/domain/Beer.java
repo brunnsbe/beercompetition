@@ -51,6 +51,8 @@ public class Beer {
 
     private Boolean finalist;
 
+    private Integer position;
+
     private Boolean delivered;
 
     // Notice, that we here use SQL Server column definition for the sequence
@@ -160,6 +162,14 @@ public class Beer {
 
     public Boolean getFinalist() {
         return finalist;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
     public void setFinalist(Boolean finalist) {

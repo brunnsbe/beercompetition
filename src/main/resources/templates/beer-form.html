@@ -96,6 +96,13 @@
             <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('score')}" th:errors="*{score}"></div>
         </div>
 
+        <div class="mb-3">
+            <label for="position" class="form-label" th:text="#{beer.position}"></label>
+            <input type="number" th:field="*{position}" id="position" th:placeholder="#{beer.position}"
+                   step="1" class="form-control">
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></div>
+        </div>
+
         <input type="submit" th:value="${beer.id} ? #{button.update_beer} : #{button.add_new_beer}" class="btn btn-primary">
         <a class="btn btn-secondary" role="button" th:href="${activePage}" th:text="#{button.cancel}"></a>
     </form>

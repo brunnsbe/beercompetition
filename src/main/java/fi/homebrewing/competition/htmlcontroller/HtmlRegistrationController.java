@@ -283,6 +283,7 @@ public class HtmlRegistrationController {
             beer.setScore(currentBeer.getScore());
             beer.setFinalist(currentBeer.getFinalist());
             beer.setDelivered(currentBeer.getDelivered());
+            beer.setPosition(currentBeer.getPosition());
         });
 
         beerRepository.save(beer);
