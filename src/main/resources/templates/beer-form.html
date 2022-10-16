@@ -11,10 +11,20 @@
 
     <div class="mb-3" th:text="#{form.required_field}"></div>
 
+    <div class="mb-3" th:if="${competition != null}">
+        <label for="competition" class="form-label" th:text="#{beer.competition}"></label>
+        <input type="text" disabled="disabled" th:field="*{competition.name}" id="competition" th:placeholder="#{beer.competition}" class="form-control">
+    </div>
+
     <form action="#"
           th:action="${competition != null} ? @{/registration/competition/{competitionId}/person/{competitorId}/beers/upsert/{beerId}(competitionId=${competition.id},competitorId=${competitors[0].id},beerId=${beer.id})} : @{/admin/beers/upsert/{id}(id=${beer.id})}"
           th:object="${beer}"
           method="post">
+
+        <div class="mb-3">
+            <label for="beerNumber" class="form-label" th:text="#{beer.number}"></label>
+            <input type="text" disabled="disabled" th:field="*{beerNumber}" id="beerNumber" th:placeholder="#{beer.number}" class="form-control">
+        </div>
 
         <div class="mb-3" th:if="${competition == null}">
             <label for="score" class="form-label" th:text="#{beer.score}"></label>
@@ -37,16 +47,6 @@
             <input type="number" th:field="*{position}" id="position" th:placeholder="#{beer.position}"
                    step="1" class="form-control">
             <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></div>
-        </div>
-
-        <div class="mb-3">
-            <label for="number" class="form-label" th:text="#{beer.number}"></label>
-            <input type="text" disabled="disabled" th:field="*{beer.number}" id="number" th:placeholder="#{beer.number}" class="form-control">
-        </div>
-
-        <div class="mb-3" th:if="${competition != null}">
-            <label for="competition" class="form-label" th:text="#{beer.competition}"></label>
-            <input type="text" disabled="disabled" th:field="*{competition.name}" id="competition" th:placeholder="#{beer.competition}" class="form-control">
         </div>
 
         <div class="mb-3">
