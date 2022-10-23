@@ -23,6 +23,15 @@ import org.springframework.lang.Nullable;
 
 @Entity
 public class Competition {
+    @Nullable
+    public String getScoreURL() {
+        return scoreURL;
+    }
+
+    public void setScoreURL(@Nullable String scoreURL) {
+        this.scoreURL = scoreURL;
+    }
+
     public enum Type {
         COMMERCIAL,
         HOMEBREWING,
@@ -42,6 +51,10 @@ public class Competition {
     @Nullable
     @Size(max = 250)
     private String description;
+
+    @Nullable
+    @Size(max = 250)
+    private String scoreURL;
 
     @Enumerated(EnumType.STRING)
     private Type type;

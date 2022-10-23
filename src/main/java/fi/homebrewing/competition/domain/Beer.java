@@ -183,4 +183,8 @@ public class Beer {
     public void setDelivered(Boolean delivered) {
         this.delivered = delivered;
     }
+
+    public Long getSequenceNumber() {
+        return sequenceNumber;
+    }
 }

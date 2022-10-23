@@ -76,7 +76,14 @@
             <td th:text="${b.delivered} ? #{filter.yes} : ''"></td>
             <td th:text="${b.finalist} ? #{filter.yes} : ''"></td>
             <td th:text="${b.position}"></td>
-            <td th:text="${#numbers.formatDecimal(b.score, 1, 'DEFAULT', 0, 'COMMA')}"></td>
+            <td>
+                <a th:if="${b.score != null && b.competitionCategoryBeerStyle.competitionCategory.competition.scoreURL != ''}"
+                   th:href="@{{scoreURL}{sequenceNumber}.pdf(scoreURL=${b.competitionCategoryBeerStyle.competitionCategory.competition.scoreURL},sequenceNumber=${b.sequenceNumber})}"
+                   target="_blank"
+                   th:text="${#numbers.formatDecimal(b.score, 1, 'DEFAULT', 0, 'COMMA')}"></a>
+                <div th:unless="${b.score != null && b.competitionCategoryBeerStyle.competitionCategory.competition.scoreURL !=''}"
+                     th:text="${#numbers.formatDecimal(b.score, 1, 'DEFAULT', 0, 'COMMA')}"></div>
+            </td>
             <td th:text="${b.comment}"></td>
         </tr>
         </tbody>

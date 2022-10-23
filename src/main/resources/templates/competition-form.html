@@ -28,6 +28,12 @@
         </div>
 
         <div class="mb-3">
+            <label for="scoreURL" class="form-label" th:text="#{competition.scoreURL}"></label>
+            <input type="text" th:field="*{scoreURL}" id="scoreURL" th:placeholder="#{competition.scoreURL}" class="form-control">
+            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('scoreURL')}" th:errors="*{scoreURL}"></div>
+        </div>
+
+        <div class="mb-3">
             <label for="introductionText" class="form-label" th:text="#{competition.introduction_text}"></label>
             <textarea th:field="*{introductionText}" id="introductionText" th:placeholder="#{competition.introduction_text}" class="form-control" rows="10"></textarea>
             <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('introductionText')}" th:errors="*{introductionText}"></div>

@@ -36,6 +36,7 @@
             <th scope="col" th:text="#{competition.competitors}"></th>
             <th scope="col" th:text="#{competition.deadline_date}"></th>
             <th scope="col" th:text="#{competition.registration_link}"></th>
+            <th scope="col" th:text="#{competition.scoreURL}"></th>
         </tr>
         </thead>
         <tbody>
@@ -56,6 +57,7 @@
             <td><a th:text="${c.competitors.size}" th:href="@{../competitors/(competition=${c.id})}"></a></td>
             <td th:text="${#dates.format(c.deadlineDate, 'dd.MM.yyyy')}"></td>
             <td><a th:href="@{/registration/competition/{id}/(id=${c.id})}" target="_blank" th:text="#{competition.link}"></a></td>
+            <td th:text="${c.scoreURL}"></td>
         </tr>
         </tbody>
     </table>
